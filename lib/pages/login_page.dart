@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flypro_expense_tracker/components/Text_Feild.dart';
+import 'package:flypro_expense_tracker/components/primary_btn.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
-  // text editing contollers
 
+  // log user in method
+  void logUserIn() {
+    
+  }
+
+  // text editing contollers
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
   @override
@@ -14,39 +20,45 @@ class LoginPage extends StatelessWidget {
       body: Center(
         child: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 100,
             ),
-            Icon(
+
+            // Flypro LOGO
+            const Icon(
               Icons.travel_explore,
               size: 100,
             ),
-            SizedBox(
+            const SizedBox(
               height: 50,
             ),
+            // TEXT
             Text(
               'Travel Expense Tracker',
               style: TextStyle(color: Colors.grey[700], fontSize: 16),
             ),
-            SizedBox(
+            const SizedBox(
               height: 25,
             ),
+            // USERNAME INPUT FIELD
             MyTextfield(
               controller: usernameController,
               hintText: "username",
               obscureText: false,
             ),
-            SizedBox(
+            const SizedBox(
               height: 25,
             ),
+            // PASSWORD INPUT FIELD
             MyTextfield(
               controller: passwordController,
               hintText: "password",
               obscureText: true,
             ),
-            SizedBox(
+            const SizedBox(
               height: 25,
             ),
+            // FORGOT PASSWORD SECTION
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
@@ -58,6 +70,26 @@ class LoginPage extends StatelessWidget {
                   ),
                 ],
               ),
+            ),
+            const SizedBox(
+              height: 25,
+            ),
+            // LOGIN BUTTON
+            PrimaryBtn(onTap: logUserIn),
+            const SizedBox(
+              height: 25,
+            ),
+            // NOT A USER? SIGN IN
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Not a User?'),
+
+                Text(
+                  ' Sign In',
+                  style: TextStyle(color: Colors.blue, fontSize: 16),
+                ),
+              ],
             ),
           ],
         ),

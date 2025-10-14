@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "768607411257",
+    "project_id": "flypro-expesne-tracker",
+    "storage_bucket": "flypro-expesne-tracker.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:768607411257:android:9ac0dacf61e890e43841e8",
+        "android_client_info": {
+          "package_name": "com.example.flypro_expense_tracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB320SNhdFjqdKFQ2clWIz_rFqlKFUzoKc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
