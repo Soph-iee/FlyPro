@@ -1,18 +1,64 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flypro_expense_tracker/components/Text_Feild.dart';
 import 'package:flypro_expense_tracker/components/primary_btn.dart';
 
-class LoginPage extends StatelessWidget {
-  LoginPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   // log user in method
-  void logUserIn() {
-    
+  void logUserIn() async {
+    // show loading circle
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+    final navigator = Navigator.of(context);
+    // try login
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+      navigator.pop(context);
+    } on FirebaseAuthException catch (e) {
+      // wrong username message
+      if (e.code == 'user-not-found') {
+        errorMessage('user not found');
+      }
+      // wrong password message
+      else if (e.code == 'wrong-password') {
+        errorMessage('Please, input the correct password');
+      }
+    }
+    // Navigator.pop(context);
+  }
+
+  void errorMessage(String data) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(data),
+        );
+      },
+    );
   }
 
   // text editing contollers
-  final usernameController = TextEditingController();
+  final emailController = TextEditingController();
+
   final passwordController = TextEditingController();
+
   @override
   Widget build(context) {
     return Scaffold(
@@ -42,7 +88,7 @@ class LoginPage extends StatelessWidget {
             ),
             // USERNAME INPUT FIELD
             MyTextfield(
-              controller: usernameController,
+              controller: emailController,
               hintText: "username",
               obscureText: false,
             ),
