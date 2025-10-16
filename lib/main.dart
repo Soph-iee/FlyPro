@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flypro_expense_tracker/pages/login_page.dart';
+import 'package:flypro_expense_tracker/pages/auth_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
@@ -15,6 +15,6 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(context) {
-    return MaterialApp(home: LoginPage());
+    return const MaterialApp(home: AuthPage());
   }
 }
