@@ -29,8 +29,14 @@ class _HomePageState extends State<HomePage> {
     FirebaseAuth.instance.signOut();
   }
 
+  final now = DateTime.now();
+
+
   @override
   Widget build(BuildContext context) {
+
+    // final List<Expense> _myExpe
+  
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
@@ -89,6 +95,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
+
             // recent expenses
             const SizedBox(
               height: 16,
@@ -97,42 +104,39 @@ class _HomePageState extends State<HomePage> {
               'Recent Expenses',
               style: TextStyle(fontSize: 24),
             ),
-            ExpenseItem(
-              expense: Expense(
-                amount: 23,
-                category: Category.accomodation,
-                currency: Currency.ngn,
-                date: DateTime.now(),
-                description: 'food at italian restaurant',
-                id: 'one',
+
+            Expanded(
+              flex: 2,
+              child: ListView.builder(
+                itemCount: 2,
+                itemBuilder: (context, index) => ExpenseItem(
+                  expense: Expense(
+                    amount: 23,
+                    date: DateTime.now(),
+                    description: 'Food at Italian restaurant',
+                  ),
+                ),
               ),
             ),
-            ExpenseItem(
-              expense: Expense(
-                amount: 23,
-                category: Category.accomodation,
-                currency: Currency.ngn,
-                date: DateTime.now(),
-                description: 'food at italian restaurant',
-                id: 'one',
-              ),
-            ),
+
             const SizedBox(
               height: 24,
             ),
-            Row(
-              children: [
-                ElevatedButton(
-                  onPressed: _addNewExpense,
-                  child: const Text('add new expense'),
-                ),
+            Expanded(
+              child: Row(
+                children: [
+                  ElevatedButton(
+                    onPressed: _addNewExpense,
+                    child: const Text('add new expense'),
+                  ),
 
-                const Spacer(),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: const Text('add new trip'),
-                ),
-              ],
+                  const Spacer(),
+                  ElevatedButton(
+                    onPressed: () {},
+                    child: const Text('add new trip'),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

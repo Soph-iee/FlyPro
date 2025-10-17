@@ -8,36 +8,26 @@ class ExpenseItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
-
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.blue[100],
-          borderRadius: BorderRadius.circular(8),
+    return ListTile(
+      contentPadding: const EdgeInsets.all(8),
+      leading: const Icon(
+        Icons.lunch_dining,
+        size: 32,
+        fontWeight: FontWeight.bold,
+      ),
+      title: Text(
+        expense.amount.toString(),
+        style: const TextStyle(
+          fontSize: 24,
         ),
-        padding: const EdgeInsets.all(25),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(expense.description),
-                Text(expense.amount.toString()),
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(expense.category.toString()),
-                Text(expense.date.toString()),
-              ],
-            ),
-          ],
-        ),
+      ),
+      subtitle: Text(
+        expense.description,
+        style: const TextStyle(fontSize: 20),
+      ),
+      trailing: Text(
+        expense.formattedDate,
+        style: const TextStyle(fontSize: 14),
       ),
     );
   }
