@@ -11,8 +11,9 @@ class Expense {
     required this.description,
     required this.date,
   });
+
   final String id;
-  final double amount;
+  final int amount;
   final Currency currency;
   final Category category;
   final String description;

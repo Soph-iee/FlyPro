@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flypro_expense_tracker/models/expense.dart';
 
 class ExpenseItem extends StatelessWidget {
-  const ExpenseItem({super.key});
+  const ExpenseItem({super.key, required this.expense});
+
+  final Expense expense;
 
   @override
   Widget build(BuildContext context) {
@@ -14,23 +17,23 @@ class ExpenseItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
         ),
         padding: const EdgeInsets.all(25),
-        child: const Column(
+        child: Column(
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('expense title'),
-                Text('expense amount'),
+                Text(expense.description),
+                Text(expense.amount.toString()),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('category'),
-                Text('trip'),
+                Text(expense.category.toString()),
+                Text(expense.date.toString()),
               ],
             ),
           ],
