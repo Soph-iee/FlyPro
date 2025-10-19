@@ -12,22 +12,25 @@ class ExpenseItem extends StatelessWidget {
       contentPadding: const EdgeInsets.all(8),
       leading: const Icon(
         Icons.lunch_dining,
-        size: 32,
+        size: 24,
         fontWeight: FontWeight.bold,
       ),
       title: Text(
-        expense.amount.toString(),
+        expense.description,
         style: const TextStyle(
           fontSize: 24,
         ),
       ),
       subtitle: Text(
-        expense.description,
-        style: const TextStyle(fontSize: 20),
-      ),
-      trailing: Text(
         expense.formattedDate,
         style: const TextStyle(fontSize: 14),
+      ),
+      trailing: Text(
+        expense.amount.toString(),
+        style: const TextStyle(
+          fontSize: 20,
+          color: Color(0xFF6D1E18),
+        ),
       ),
     );
   }

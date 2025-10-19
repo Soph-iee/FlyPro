@@ -4,7 +4,7 @@ enum Currency { usd, ngn }
 
 enum Category { travel, meals, accomodation, transport, other }
 
-final formatter = DateFormat.yMMMMEEEEd();
+final formatter = DateFormat.yMMMd();
 
 class Expense {
   Expense({

@@ -14,12 +14,6 @@ class CardContainer extends StatelessWidget {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(24),
-        // margin: const EdgeInsetsGeometry.symmetric(
-        //   vertical: 4,
-        // ),
-
-        // height: ,
-        // width: 200,
         decoration: BoxDecoration(
           color: Colors.blue[50],
           borderRadius: BorderRadius.circular(8),

@@ -19,9 +19,16 @@ class _HomePageState extends State<HomePage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const NewExpensePage(),
+        builder: (context) => NewExpensePage(onAddExpense: _updateExpenseList),
       ),
     );
+  }
+
+  void _updateExpenseList(Expense expense) {
+    setState(() {
+      _myExpenses.add(expense);
+    });
+    print(_myExpenses);
   }
 
   // sign out function
@@ -31,29 +38,72 @@ class _HomePageState extends State<HomePage> {
 
   final now = DateTime.now();
 
+  final List<Expense> _myExpenses = [
+    Expense(amount: 20, description: 'Silk scarf', date: DateTime.now()),
+    Expense(
+      amount: 240,
+      description: 'Lunch at Italian restaurant',
+      date: DateTime.now(),
+    ),
+    Expense(
+      amount: 300,
+      description: 'Women Confrence',
+      date: DateTime.now(),
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
-
-    // final List<Expense> _myExpe
-  
     return Scaffold(
+      backgroundColor: const Color(0xfff9fafb),
       appBar: AppBar(
-        backgroundColor: Colors.blue,
+        backgroundColor: const Color(0xff2563eb),
         animateColor: true,
         actions: [
           IconButton(onPressed: _signUserOut, icon: const Icon(Icons.logout)),
         ],
       ),
       // the home page body- welcome message
-      body: Padding(
-        padding: const EdgeInsets.only(left: 8),
+      body: Container(
+        margin: const EdgeInsets.all(10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Welcome message',
-              style: TextStyle(fontSize: 32),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadiusGeometry.circular(60),
+                  child: Image.asset(
+                    'assets/images/John.jpg',
+                    width: 40,
+                    height: 40,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(
+                  width: 10.0,
+                ),
+                const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Welcome Back',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w100,
+                      ),
+                    ),
+                    Text(
+                      'John Doe',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
 
             // the cards
@@ -108,14 +158,9 @@ class _HomePageState extends State<HomePage> {
             Expanded(
               flex: 2,
               child: ListView.builder(
-                itemCount: 2,
-                itemBuilder: (context, index) => ExpenseItem(
-                  expense: Expense(
-                    amount: 23,
-                    date: DateTime.now(),
-                    description: 'Food at Italian restaurant',
-                  ),
-                ),
+                itemCount: _myExpenses.length,
+                itemBuilder: (context, index) =>
+                    ExpenseItem(expense: _myExpenses[index]),
               ),
             ),
 

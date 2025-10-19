@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flypro_expense_tracker/components/Text_Feild.dart';
 import 'package:flypro_expense_tracker/components/primary_btn.dart';
 
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -14,22 +15,22 @@ class _LoginPageState extends State<LoginPage> {
   // log user in method
   void logUserIn() async {
     // show loading circle
-    showDialog(
-      context: context,
-      builder: (ctx) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    );
-    final navigator = Navigator.of(context);
+    // showDialog(
+    //   context: context,
+    //   builder: (ctx) {
+    //     return const Center(
+    //       child: CircularProgressIndicator(),
+    //     );
+    //   },
+    // );
+    // final navigator = Navigator.of(context);
     // try login
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text,
         password: passwordController.text,
       );
-      navigator.pop(context);
+      // navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       // wrong username message
       if (e.code == 'user-not-found') {

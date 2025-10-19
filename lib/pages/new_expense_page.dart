@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flypro_expense_tracker/models/expense.dart';
+import 'package:flypro_expense_tracker/pages/home_page.dart';
 
 class NewExpensePage extends StatefulWidget {
-  const NewExpensePage({super.key});
+  const NewExpensePage({super.key, required this.onAddExpense});
+
+  final void Function(Expense expense) onAddExpense;
 
   @override
   State<NewExpensePage> createState() => _NewExpensePageState();
@@ -25,7 +29,7 @@ class _NewExpensePageState extends State<NewExpensePage> {
 
   // add new expense
   void _addNewExpense() {
-    final amountEntered = double.tryParse(_amountController.text);
+    final amountEntered = int.tryParse(_amountController.text);
     final validAmount = amountEntered == null || amountEntered <= 0;
     final validTitle = _descriptionController.text.trim();
 
@@ -48,9 +52,19 @@ class _NewExpensePageState extends State<NewExpensePage> {
         ),
       );
     } else {
-      print(validAmount);
-      print(amountEntered);
-      print(selectedDate);
+      widget.onAddExpense(
+        Expense(
+          amount: amountEntered,
+          description: validTitle,
+          date: selectedDate!,
+        ),
+      );
+      Navigator.pop(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const HomePage(),
+        ),
+      );
     }
   }
 
