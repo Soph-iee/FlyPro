@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flypro_expense_tracker/models/expense.dart';
-import 'package:flypro_expense_tracker/pages/home_page.dart';
+import 'package:flypro_expense_tracker/models/expense_model.dart';
+import 'package:flypro_expense_tracker/screens/home/home_screen.dart';
 
 class NewExpensePage extends StatefulWidget {
   const NewExpensePage({super.key, required this.onAddExpense});
@@ -57,12 +57,13 @@ class _NewExpensePageState extends State<NewExpensePage> {
           amount: amountEntered,
           description: validTitle,
           date: selectedDate!,
+          category: Category.other,
         ),
       );
       Navigator.pop(
         context,
         MaterialPageRoute(
-          builder: (context) => const HomePage(),
+          builder: (context) => const HomeScreen(),
         ),
       );
     }
@@ -95,7 +96,7 @@ class _NewExpensePageState extends State<NewExpensePage> {
               controller: _amountController,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                hintText: 'Enter Amount',
+                label: Text('Amount'),
               ),
             ),
             const SizedBox(
@@ -106,7 +107,7 @@ class _NewExpensePageState extends State<NewExpensePage> {
               controller: _descriptionController,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                hintText: 'Enter Description',
+                label: Text('Description'),
               ),
             ),
             const SizedBox(
@@ -115,24 +116,26 @@ class _NewExpensePageState extends State<NewExpensePage> {
 
             Row(
               children: [
-                Expanded(
-                  child: selectedDate == null
-                      ? IconButton.filledTonal(
-                          padding: const EdgeInsets.all(16),
-                          tooltip: 'Date Picker',
-                          iconSize: 32,
-                          onPressed: _selectDate,
-                          icon: const Icon(Icons.calendar_month_rounded),
-                        )
-                      : Text(
-                          '${selectedDate!.day} / ${selectedDate!.month} / ${selectedDate!.year} ',
-                          style: const TextStyle(
-                            fontSize: 20,
-                            decorationThickness: 0.5,
-                            decoration: TextDecoration.underline,
-                          ),
+                selectedDate == null
+                    ? IconButton.filledTonal(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 48,
+                          vertical: 8,
                         ),
-                ),
+                        tooltip: 'Date Picker',
+                        iconSize: 32,
+                        onPressed: _selectDate,
+                        icon: const Icon(Icons.calendar_month_rounded),
+                      )
+                    : Text(
+                        '${selectedDate!.day} / ${selectedDate!.month} / ${selectedDate!.year} ',
+                        style: const TextStyle(
+                          fontSize: 20,
+                          decorationThickness: 0.5,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+
                 const SizedBox(
                   width: 16,
                 ),

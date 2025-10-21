@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flypro_expense_tracker/models/expense.dart';
+import 'package:flypro_expense_tracker/models/expense_model.dart';
 
 class ExpenseItem extends StatelessWidget {
   const ExpenseItem({super.key, required this.expense});
@@ -9,16 +9,24 @@ class ExpenseItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      contentPadding: const EdgeInsets.all(8),
-      leading: const Icon(
-        Icons.lunch_dining,
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: 8,
+      ),
+      dense: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadiusGeometry.circular(16),
+      ),
+      tileColor: Colors.blue[50],
+      onTap: () {},
+      leading: Icon(
+        categoryIcons[expense.category],
         size: 24,
         fontWeight: FontWeight.bold,
       ),
       title: Text(
         expense.description,
         style: const TextStyle(
-          fontSize: 24,
+          fontSize: 20,
         ),
       ),
       subtitle: Text(

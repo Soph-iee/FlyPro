@@ -2,18 +2,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flypro_expense_tracker/components/card_container.dart';
 import 'package:flypro_expense_tracker/components/expense_item.dart';
-import 'package:flypro_expense_tracker/models/expense.dart';
-import 'package:flypro_expense_tracker/pages/new_expense_page.dart';
+import 'package:flypro_expense_tracker/models/expense_model.dart';
+import 'package:flypro_expense_tracker/screens/Expense/new_expense_page.dart';
 // import 'package:flypro_expense_tracker/components/expense_item.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomeScreenState extends State<HomeScreen> {
   //  add new expense function
   void _addNewExpense() {
     Navigator.push(
@@ -28,7 +28,6 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _myExpenses.add(expense);
     });
-    print(_myExpenses);
   }
 
   // sign out function
@@ -39,13 +38,20 @@ class _HomePageState extends State<HomePage> {
   final now = DateTime.now();
 
   final List<Expense> _myExpenses = [
-    Expense(amount: 20, description: 'Silk scarf', date: DateTime.now()),
+    Expense(
+      amount: 20,
+      description: 'Silk scarf',
+      date: DateTime.now(),
+      category: Category.other,
+    ),
     Expense(
       amount: 240,
       description: 'Lunch at Italian restaurant',
       date: DateTime.now(),
+      category: Category.meals,
     ),
     Expense(
+      category: Category.accomodation,
       amount: 300,
       description: 'Women Confrence',
       date: DateTime.now(),
@@ -63,6 +69,7 @@ class _HomePageState extends State<HomePage> {
           IconButton(onPressed: _signUserOut, icon: const Icon(Icons.logout)),
         ],
       ),
+
       // the home page body- welcome message
       body: Container(
         margin: const EdgeInsets.all(10.0),
@@ -84,17 +91,18 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(
                   width: 10.0,
                 ),
-                const Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Welcome Back',
+                      'Welcome Back!',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w100,
+                        color: Theme.of(context).colorScheme.outline,
                       ),
                     ),
-                    Text(
+                    const Text(
                       'John Doe',
                       style: TextStyle(
                         fontSize: 24,
@@ -106,44 +114,42 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
 
-            // the cards
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  CardContainer(
-                    cardText: 'expenses',
-                    amount: 12,
-                  ),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  CardContainer(
-                    cardText: 'trip',
-                    amount: 8,
-                  ),
-                ],
-              ),
+            const SizedBox(
+              height: 16,
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  CardContainer(
-                    cardText: 'pending',
-                    amount: 32,
-                  ),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  CardContainer(
-                    cardText: 'savings',
-                    amount: 2840,
-                  ),
-                ],
-              ),
+            // the cards
+            const Row(
+              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CardContainer(
+                  cardText: 'Expenses',
+                  amount: 18800,
+                  iconData: Icons.trending_down,
+                ),
+
+                CardContainer(
+                  cardText: 'Trip',
+                  amount: 1,
+                  iconData: Icons.flight_takeoff,
+                ),
+              ],
+            ),
+
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CardContainer(
+                  cardText: 'Pending',
+                  amount: 5,
+                  iconData: Icons.travel_explore,
+                ),
+
+                CardContainer(
+                  cardText: 'Savings',
+                  amount: 12840,
+                  iconData: Icons.money,
+                ),
+              ],
             ),
 
             // recent expenses
@@ -159,33 +165,43 @@ class _HomePageState extends State<HomePage> {
               flex: 2,
               child: ListView.builder(
                 itemCount: _myExpenses.length,
-                itemBuilder: (context, index) =>
-                    ExpenseItem(expense: _myExpenses[index]),
+                itemBuilder: (context, index) => Padding(
+                  padding: const EdgeInsets.all(4),
+                  child: ExpenseItem(expense: _myExpenses[index]),
+                ),
               ),
             ),
 
             const SizedBox(
               height: 24,
             ),
-            Expanded(
-              child: Row(
-                children: [
-                  ElevatedButton(
-                    onPressed: _addNewExpense,
-                    child: const Text('add new expense'),
-                  ),
-
-                  const Spacer(),
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: const Text('add new trip'),
-                  ),
-                ],
-              ),
-            ),
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _addNewExpense,
+        child: const Icon(Icons.add),
+      ),
+
+      bottomNavigationBar: BottomNavigationBar(
+        items: [
+          const BottomNavigationBarItem(icon: Icon(Icons.home), label: 'home'),
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.flight_takeoff),
+            label: 'trips',
+          ),
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.money),
+            label: 'expense',
+          ),
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.notes),
+            label: 'budget',
+          ),
+        ],
+        type: BottomNavigationBarType.fixed,
+      ),
+      drawer: const Drawer(),
     );
   }
 }
