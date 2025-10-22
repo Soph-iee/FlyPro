@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flypro_expense_tracker/models/expense_model.dart';
 
 class CategoryGrid extends StatelessWidget {
-  const CategoryGrid({super.key});
-
+  const CategoryGrid({super.key, required this.selectCategory});
+  final void Function(Category value) selectCategory;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -16,34 +16,36 @@ class CategoryGrid extends StatelessWidget {
         ),
         itemCount: categoryIcons.length,
         itemBuilder: (context, index) {
-          return Expanded(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              spacing: 2.0,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                IconButton.filled(
-                  color: Theme.of(context).colorScheme.primary,
-                  style: IconButton.styleFrom(
-                    backgroundColor: Colors.blue[100],
-                    padding: const EdgeInsets.all(16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
+          return Column(
+            mainAxisSize: MainAxisSize.max,
+            spacing: 2.0,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              IconButton.filled(
+                color: Theme.of(context).colorScheme.primary,
+                style: IconButton.styleFrom(
+                  backgroundColor: Colors.blue[100],
+                  padding: const EdgeInsets.all(16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  onPressed: () {},
-                  icon: Icon(
-                    categoryIcons[Category.values[index]],
-                  ),
-                  iconSize: 32.0,
                 ),
-                Text(
-                  Category.values[index].name,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                onPressed: () {
+                  // final  value = Category.values[index].name;
+                  selectCategory(Category.values[index]);
+                  Navigator.pop(context);
+                },
+                icon: Icon(
+                  categoryIcons[Category.values[index]],
                 ),
-              ],
-            ),
+                iconSize: 32.0,
+              ),
+              Text(
+                Category.values[index].name,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
           );
         },
       ),

@@ -37,7 +37,10 @@ class _NewExpensePageState extends State<NewExpensePage> {
     final validAmount = amountEntered == null || amountEntered <= 0;
     final validTitle = _descriptionController.text.trim();
 
-    if (validAmount || validTitle.isEmpty || selectedDate == null) {
+    if (validAmount ||
+        validTitle.isEmpty ||
+        selectedDate == null ||
+        selectedCategory == null) {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
@@ -60,7 +63,7 @@ class _NewExpensePageState extends State<NewExpensePage> {
           amount: amountEntered,
           description: validTitle,
           date: selectedDate!,
-          category: Category.other,
+          category: selectedCategory!,
         ),
       );
       Navigator.pop(
@@ -75,15 +78,17 @@ class _NewExpensePageState extends State<NewExpensePage> {
   void _showCategory() {
     showModalBottomSheet(
       context: context,
-      builder: (ctx) => const CategoryGrid(),
+      builder: (ctx) => CategoryGrid(
+        selectCategory: _selectCategory,
+      ),
     );
   }
 
   void _showTrips() {
-    showModalBottomSheet(
-      context: context,
-      builder: (ctx) => const CategoryGrid(),
-    );
+    // showModalBottomSheet(
+    //   context: context,
+    //   builder: (ctx) => const CategoryGrid(),
+    // );
   }
 
   void _showImagePicker() {
@@ -102,11 +107,19 @@ class _NewExpensePageState extends State<NewExpensePage> {
     Navigator.pop(context);
   }
 
+  void _selectCategory(Category value) {
+    setState(() {
+      selectedCategory = value;
+    });
+    print(value);
+  }
+
   final _amountController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _notesController = TextEditingController();
   String currencyValue = 'USD';
   File? _receiptImage;
+  Category? selectedCategory;
 
   @override
   void dispose() {
@@ -122,11 +135,18 @@ class _NewExpensePageState extends State<NewExpensePage> {
       appBar: AppBar(
         title: const Text('Add new expense '),
         actions: [
-          TextButton(
+          TextButton.icon(
             onPressed: _addNewExpense,
-            child: const Text(
+            label: const Text(
               'Save',
-              style: TextStyle(fontSize: 20),
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            icon: Icon(
+              Icons.check,
+              weight: 32,
             ),
           ),
         ],
@@ -171,7 +191,13 @@ class _NewExpensePageState extends State<NewExpensePage> {
                     ),
                   ],
                 ),
-                label: const Text('Amount'),
+                label: const Text(
+                  'Amount',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
 
@@ -189,13 +215,21 @@ class _NewExpensePageState extends State<NewExpensePage> {
                   ),
                 ),
               ),
-              child: const Row(
+              child: Row(
                 children: [
-                  Icon(Icons.category),
-                  SizedBox(
+                  const Icon(Icons.category),
+                  const SizedBox(
                     width: 8,
                   ),
-                  Text('category'),
+                  Text(
+                    selectedCategory == null
+                        ? 'Category'
+                        : selectedCategory!.name,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -216,11 +250,17 @@ class _NewExpensePageState extends State<NewExpensePage> {
               ),
               child: const Row(
                 children: [
-                  Icon(Icons.category),
+                  Icon(Icons.travel_explore),
                   SizedBox(
                     width: 8,
                   ),
-                  Text('category'),
+                  Text(
+                    'Trip Assignment',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -240,7 +280,13 @@ class _NewExpensePageState extends State<NewExpensePage> {
                   gapPadding: 16,
                   borderRadius: BorderRadius.circular(8.0),
                 ),
-                label: const Text('Description'),
+                label: const Text(
+                  'Description',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
             const SizedBox(
@@ -257,7 +303,13 @@ class _NewExpensePageState extends State<NewExpensePage> {
                   gapPadding: 16,
                   borderRadius: BorderRadius.circular(8.0),
                 ),
-                label: const Text('Notes'),
+                label: const Text(
+                  'Notes',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 hintText: 'add notes here ...',
               ),
             ),
@@ -274,7 +326,7 @@ class _NewExpensePageState extends State<NewExpensePage> {
                             'Pick Date',
                             style: TextStyle(
                               fontSize: 16,
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
 
@@ -316,7 +368,7 @@ class _NewExpensePageState extends State<NewExpensePage> {
                       'Add Receipt',
                       style: TextStyle(
                         fontSize: 16,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     icon: const Icon(
@@ -333,11 +385,15 @@ class _NewExpensePageState extends State<NewExpensePage> {
             Container(
               padding: const EdgeInsets.all(16),
               width: double.infinity,
-              height: 300.0,
+              // height: 300.0,
               margin: const EdgeInsets.only(bottom: 32),
               color: Colors.grey[200],
               child: _receiptImage != null
-                  ? Image.file(_receiptImage!)
+                  ? Image.file(
+                      _receiptImage!,
+                      height: 250,
+                      width: 250,
+                    )
                   : GestureDetector(
                       onTap: _showImagePicker,
                       child: const Center(
