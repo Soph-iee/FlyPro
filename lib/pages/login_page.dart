@@ -1,8 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flypro_expense_tracker/components/Text_Feild.dart';
+import 'package:flypro_expense_tracker/components/text_field.dart';
 import 'package:flypro_expense_tracker/components/primary_btn.dart';
-
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

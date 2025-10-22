@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flypro_expense_tracker/screens/Expense/category_grid.dart';
+import 'package:flypro_expense_tracker/screens/Expense/receipt_picker.dart';
 import 'package:flypro_expense_tracker/models/expense_model.dart';
 import 'package:flypro_expense_tracker/screens/home/home_screen.dart';
 
@@ -34,7 +38,6 @@ class _NewExpensePageState extends State<NewExpensePage> {
     final validTitle = _descriptionController.text.trim();
 
     if (validAmount || validTitle.isEmpty || selectedDate == null) {
-      // print('object');
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
@@ -69,8 +72,49 @@ class _NewExpensePageState extends State<NewExpensePage> {
     }
   }
 
+  void _showCategory() {
+    showModalBottomSheet(
+      context: context,
+      builder: (ctx) => const CategoryGrid(),
+    );
+  }
+
+  void _showTrips() {
+    showModalBottomSheet(
+      context: context,
+      builder: (ctx) => const CategoryGrid(),
+    );
+  }
+
+  void _showImagePicker() {
+    showModalBottomSheet(
+      context: context,
+      builder: (ctx) => ReceiptPicker(
+        onPickReceipt: _selectRecieptImage,
+      ),
+    );
+  }
+
+  void _selectRecieptImage(File image) {
+    setState(() {
+      _receiptImage = image;
+    });
+    Navigator.pop(context);
+  }
+
   final _amountController = TextEditingController();
   final _descriptionController = TextEditingController();
+  final _notesController = TextEditingController();
+  String currencyValue = 'USD';
+  File? _receiptImage;
+
+  @override
+  void dispose() {
+    _amountController.dispose();
+    _descriptionController.dispose();
+    _notesController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,55 +135,221 @@ class _NewExpensePageState extends State<NewExpensePage> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Column(
           children: [
+            // amount
             TextField(
               keyboardType: TextInputType.number,
               controller: _amountController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                label: Text('Amount'),
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  gapPadding: 16,
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                contentPadding: const EdgeInsets.all(0),
+                prefix: DropdownButton(
+                  value: currencyValue,
+                  onChanged: (String? value) {
+                    setState(() {
+                      currencyValue = value!;
+                    });
+                  },
+                  items: const [
+                    DropdownMenuItem(
+                      value: 'NGN',
+                      child: Text('NGN'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'USD',
+                      child: Text('USD'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'GBP',
+                      child: Text('GBP'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'CAD',
+                      child: Text('CAD'),
+                    ),
+                  ],
+                ),
+                label: const Text('Amount'),
               ),
             ),
+
             const SizedBox(
-              height: 16,
+              height: 8,
             ),
+
+            // category
+            OutlinedButton(
+              onPressed: _showCategory,
+              style: OutlinedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                    8.0,
+                  ),
+                ),
+              ),
+              child: const Row(
+                children: [
+                  Icon(Icons.category),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  Text('category'),
+                ],
+              ),
+            ),
+
+            const SizedBox(
+              height: 8,
+            ),
+
+            // trip assignement
+            OutlinedButton(
+              onPressed: _showTrips,
+              style: OutlinedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                    8.0,
+                  ),
+                ),
+              ),
+              child: const Row(
+                children: [
+                  Icon(Icons.category),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  Text('category'),
+                ],
+              ),
+            ),
+
+            const SizedBox(
+              height: 8,
+            ),
+
+            // description
             TextField(
               keyboardType: TextInputType.text,
               controller: _descriptionController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                label: Text('Description'),
+              maxLength: 20,
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.all(0),
+                border: OutlineInputBorder(
+                  gapPadding: 16,
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                label: const Text('Description'),
               ),
             ),
             const SizedBox(
-              height: 16,
+              height: 2,
+            ),
+
+            // notes
+            TextField(
+              keyboardType: TextInputType.text,
+              controller: _notesController,
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.all(0),
+                border: OutlineInputBorder(
+                  gapPadding: 16,
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                label: const Text('Notes'),
+                hintText: 'add notes here ...',
+              ),
+            ),
+            const SizedBox(
+              height: 8,
             ),
 
             Row(
               children: [
                 selectedDate == null
-                    ? IconButton.filledTonal(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 48,
-                          vertical: 8,
+                    ? Expanded(
+                        child: ElevatedButton.icon(
+                          label: const Text(
+                            'Pick Date',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Theme.of(
+                              context,
+                            ).colorScheme.primary,
+                            foregroundColor: Colors.white,
+                          ),
+                          onPressed: _selectDate,
+                          icon: const Icon(
+                            Icons.calendar_month_rounded,
+                            size: 24,
+                          ),
                         ),
-                        tooltip: 'Date Picker',
-                        iconSize: 32,
-                        onPressed: _selectDate,
-                        icon: const Icon(Icons.calendar_month_rounded),
                       )
                     : Text(
                         '${selectedDate!.day} / ${selectedDate!.month} / ${selectedDate!.year} ',
                         style: const TextStyle(
                           fontSize: 20,
-                          decorationThickness: 0.5,
-                          decoration: TextDecoration.underline,
+                          fontWeight: FontWeight.bold,
+                          // decoration: TextDecoration.underline,
                         ),
                       ),
 
                 const SizedBox(
                   width: 16,
                 ),
+                Expanded(
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(
+                        context,
+                      ).colorScheme.primary,
+                      foregroundColor: Colors.white,
+                    ),
+                    onPressed: _showImagePicker,
+                    label: const Text(
+                      'Add Receipt',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    icon: const Icon(
+                      Icons.camera_alt,
+                      size: 24,
+                    ),
+                  ),
+                ),
               ],
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            Container(
+              padding: const EdgeInsets.all(16),
+              width: double.infinity,
+              height: 300.0,
+              margin: const EdgeInsets.only(bottom: 32),
+              color: Colors.grey[200],
+              child: _receiptImage != null
+                  ? Image.file(_receiptImage!)
+                  : GestureDetector(
+                      onTap: _showImagePicker,
+                      child: const Center(
+                        child: Text(
+                          'Upload your receipt image here ',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ),
             ),
           ],
         ),

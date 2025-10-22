@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flypro_expense_tracker/components/card_container.dart';
-import 'package:flypro_expense_tracker/components/expense_item.dart';
+import 'package:flypro_expense_tracker/screens/home/card_container.dart';
+import 'package:flypro_expense_tracker/screens/home/expense_item.dart';
 import 'package:flypro_expense_tracker/models/expense_model.dart';
 import 'package:flypro_expense_tracker/screens/Expense/new_expense_page.dart';
 // import 'package:flypro_expense_tracker/components/expense_item.dart';
@@ -63,7 +63,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: const Color(0xfff9fafb),
       appBar: AppBar(
-        backgroundColor: const Color(0xff2563eb),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Theme.of(context).colorScheme.surface,
         animateColor: true,
         actions: [
           IconButton(onPressed: _signUserOut, icon: const Icon(Icons.logout)),
