@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flypro_expense_tracker/pages/auth_page.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flypro_expense_tracker/screens/trips/new_trip.dart';
 import 'firebase_options.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(context) {
     return MaterialApp(
-      home: const AuthPage(),
+      home: const NewTrip(),
       title: 'expense tracker',
       theme: ThemeData(
         textTheme: GoogleFonts.latoTextTheme(),

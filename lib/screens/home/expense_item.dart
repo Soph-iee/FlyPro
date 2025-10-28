@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flypro_expense_tracker/models/expense_model.dart';
 
 class ExpenseItem extends StatelessWidget {
-  const ExpenseItem({super.key, required this.expense});
+  const ExpenseItem({super.key, required this.expense, required this.currency});
 
   final Expense expense;
+  final String currency;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +35,7 @@ class ExpenseItem extends StatelessWidget {
         style: const TextStyle(fontSize: 14),
       ),
       trailing: Text(
-        expense.amount.toString(),
+        '$currency ${expense.amount}',
         style: const TextStyle(
           fontSize: 20,
           color: Color(0xFF6D1E18),

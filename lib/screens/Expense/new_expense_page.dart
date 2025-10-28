@@ -7,9 +7,16 @@ import 'package:flypro_expense_tracker/models/expense_model.dart';
 import 'package:flypro_expense_tracker/screens/home/home_screen.dart';
 
 class NewExpensePage extends StatefulWidget {
-  const NewExpensePage({super.key, required this.onAddExpense});
+  const NewExpensePage({
+    super.key,
+    required this.onAddExpense,
+    required this.onChanged,
+    required this.currencyValue,
+  });
 
   final void Function(Expense expense) onAddExpense;
+  final ValueChanged<String?> onChanged;
+  final String currencyValue;
 
   @override
   State<NewExpensePage> createState() => _NewExpensePageState();
@@ -111,13 +118,13 @@ class _NewExpensePageState extends State<NewExpensePage> {
     setState(() {
       selectedCategory = value;
     });
-    print(value);
+    // print(widget.currencyValue);
   }
 
   final _amountController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _notesController = TextEditingController();
-  String currencyValue = 'USD';
+
   File? _receiptImage;
   Category? selectedCategory;
 
@@ -144,7 +151,7 @@ class _NewExpensePageState extends State<NewExpensePage> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            icon: Icon(
+            icon: const Icon(
               Icons.check,
               weight: 32,
             ),
@@ -166,12 +173,8 @@ class _NewExpensePageState extends State<NewExpensePage> {
                 ),
                 contentPadding: const EdgeInsets.all(0),
                 prefix: DropdownButton(
-                  value: currencyValue,
-                  onChanged: (String? value) {
-                    setState(() {
-                      currencyValue = value!;
-                    });
-                  },
+                  value: widget.currencyValue,
+                  onChanged: widget.onChanged,
                   items: const [
                     DropdownMenuItem(
                       value: 'NGN',

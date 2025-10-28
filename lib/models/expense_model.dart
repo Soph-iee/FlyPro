@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-enum Currency { usd, ngn }
+
 
 enum Category { travel, meals, accomodation, transport, other }
+enum Currency { usd, ngn, cad, bgp }
 
 const categoryIcons = {
   Category.travel: Icons.flight_takeoff,

@@ -1,9 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flypro_expense_tracker/screens/Charts/expense_chart.dart';
+import 'package:flypro_expense_tracker/screens/Settings/user_profile.dart';
 import 'package:flypro_expense_tracker/screens/home/card_container.dart';
 import 'package:flypro_expense_tracker/screens/home/expense_item.dart';
 import 'package:flypro_expense_tracker/models/expense_model.dart';
 import 'package:flypro_expense_tracker/screens/Expense/new_expense_page.dart';
+import 'package:flypro_expense_tracker/screens/trips/all_trips.dart';
 // import 'package:flypro_expense_tracker/components/expense_item.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -14,12 +17,17 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String _prefferedCurrency = 'USD';
   //  add new expense function
   void _addNewExpense() {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => NewExpensePage(onAddExpense: _updateExpenseList),
+        builder: (context) => NewExpensePage(
+          onAddExpense: _updateExpenseList,
+          currencyValue: _prefferedCurrency,
+          onChanged: _chooseCurrency,
+        ),
       ),
     );
   }
@@ -33,6 +41,13 @@ class _HomeScreenState extends State<HomeScreen> {
   // sign out function
   void _signUserOut() {
     FirebaseAuth.instance.signOut();
+  }
+
+  final String _currencyValue = 'USD';
+  void _chooseCurrency(String? value) {
+    setState(() {
+      _prefferedCurrency = value!;
+    });
   }
 
   final now = DateTime.now();
@@ -58,6 +73,14 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
   ];
 
+  List screens = [
+    const HomeScreen(),
+    const AllTrips(),
+    const ExpenseChart(),
+    const UserProfile(),
+  ];
+
+  int index = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -168,7 +191,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 itemCount: _myExpenses.length,
                 itemBuilder: (context, index) => Padding(
                   padding: const EdgeInsets.all(4),
-                  child: ExpenseItem(expense: _myExpenses[index]),
+                  child: ExpenseItem(
+                    expense: _myExpenses[index],
+                    currency: _currencyValue,
+                  ),
                 ),
               ),
             ),
@@ -185,8 +211,18 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
 
       bottomNavigationBar: BottomNavigationBar(
+        currentIndex: index,  
+
+        onTap: (int index) {
+          setState(() {
+            screens[index];
+          });
+        },
         items: [
-          const BottomNavigationBarItem(icon: Icon(Icons.home), label: 'home'),
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'home',
+          ),
           const BottomNavigationBarItem(
             icon: Icon(Icons.flight_takeoff),
             label: 'trips',
