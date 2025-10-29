@@ -1,11 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flypro_expense_tracker/models/expense_model.dart';
+import 'package:flypro_expense_tracker/widgets/expense_detail.dart';
 
 class ExpenseItem extends StatelessWidget {
-  const ExpenseItem({super.key, required this.expense, required this.currency});
+  const ExpenseItem({super.key, required this.expense});
 
   final Expense expense;
-  final String currency;
+  void _showDetails(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (ctx) => ExpenseDetail(
+          expense: expense,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +28,9 @@ class ExpenseItem extends StatelessWidget {
         borderRadius: BorderRadiusGeometry.circular(16),
       ),
       tileColor: Colors.blue[50],
-      onTap: () {},
+      onTap: () {
+        _showDetails(context);
+      },
       leading: Icon(
         categoryIcons[expense.category],
         size: 24,
@@ -35,7 +47,7 @@ class ExpenseItem extends StatelessWidget {
         style: const TextStyle(fontSize: 14),
       ),
       trailing: Text(
-        '$currency ${expense.amount}',
+        '${expense.currency.name.toUpperCase()} ${expense.amount}',
         style: const TextStyle(
           fontSize: 20,
           color: Color(0xFF6D1E18),

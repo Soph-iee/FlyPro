@@ -1,8 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flypro_expense_tracker/screens/Expense/category_grid.dart';
-import 'package:flypro_expense_tracker/screens/Expense/receipt_picker.dart';
+import 'package:flypro_expense_tracker/data/dummy_trips.dart';
+import 'package:flypro_expense_tracker/widgets/category_grid.dart';
+import 'package:flypro_expense_tracker/widgets/receipt_picker.dart';
 import 'package:flypro_expense_tracker/models/expense_model.dart';
 import 'package:flypro_expense_tracker/screens/home/home_screen.dart';
 
@@ -10,13 +11,9 @@ class NewExpensePage extends StatefulWidget {
   const NewExpensePage({
     super.key,
     required this.onAddExpense,
-    required this.onChanged,
-    required this.currencyValue,
   });
 
   final void Function(Expense expense) onAddExpense;
-  final ValueChanged<String?> onChanged;
-  final String currencyValue;
 
   @override
   State<NewExpensePage> createState() => _NewExpensePageState();
@@ -43,11 +40,12 @@ class _NewExpensePageState extends State<NewExpensePage> {
     final amountEntered = int.tryParse(_amountController.text);
     final validAmount = amountEntered == null || amountEntered <= 0;
     final validTitle = _descriptionController.text.trim();
-
+    final notes = _notesController.text.trim();
     if (validAmount ||
         validTitle.isEmpty ||
         selectedDate == null ||
-        selectedCategory == null) {
+        selectedCategory == null ||
+        _trip == null) {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
@@ -71,6 +69,9 @@ class _NewExpensePageState extends State<NewExpensePage> {
           description: validTitle,
           date: selectedDate!,
           category: selectedCategory!,
+          currency: _prefferedCurrency,
+          tripId: _trip!,
+          notes: notes,
         ),
       );
       Navigator.pop(
@@ -92,10 +93,34 @@ class _NewExpensePageState extends State<NewExpensePage> {
   }
 
   void _showTrips() {
-    // showModalBottomSheet(
-    //   context: context,
-    //   builder: (ctx) => const CategoryGrid(),
-    // );
+    showModalBottomSheet(
+      context: context,
+      builder: (ctx) => ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: myTrips.length,
+        itemBuilder: (context, index) => ListTile(
+          splashColor: Colors.blue,
+          onTap: () {
+            setState(() {
+              _trip = myTrips[index].destination;
+            });
+            Navigator.pop(context);
+          },
+          title: Text(
+            myTrips[index].name,
+            style: const TextStyle(fontSize: 16),
+          ),
+          subtitle: Text(
+            myTrips[index].destination,
+            style: const TextStyle(fontSize: 20),
+          ),
+          trailing: Text(
+            ' ${myTrips[index].currency.name.toUpperCase()} ${myTrips[index].budget}',
+            style: const TextStyle(fontSize: 16),
+          ),
+        ),
+      ),
+    );
   }
 
   void _showImagePicker() {
@@ -127,6 +152,8 @@ class _NewExpensePageState extends State<NewExpensePage> {
 
   File? _receiptImage;
   Category? selectedCategory;
+  Currency _prefferedCurrency = Currency.cad;
+  String? _trip;
 
   @override
   void dispose() {
@@ -172,28 +199,27 @@ class _NewExpensePageState extends State<NewExpensePage> {
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 contentPadding: const EdgeInsets.all(0),
-                prefix: DropdownButton(
-                  value: widget.currencyValue,
-                  onChanged: widget.onChanged,
-                  items: const [
-                    DropdownMenuItem(
-                      value: 'NGN',
-                      child: Text('NGN'),
-                    ),
-                    DropdownMenuItem(
-                      value: 'USD',
-                      child: Text('USD'),
-                    ),
-                    DropdownMenuItem(
-                      value: 'GBP',
-                      child: Text('GBP'),
-                    ),
-                    DropdownMenuItem(
-                      value: 'CAD',
-                      child: Text('CAD'),
-                    ),
-                  ],
+                prefix: DropdownButton<Currency>(
+                  value: _prefferedCurrency,
+
+                  items: Currency.values.map((currency) {
+                    return DropdownMenuItem<Currency>(
+                      value: currency,
+                      child: Text(
+                        currency.name.toUpperCase(),
+                      ), // Use .name for the display text
+                    );
+                  }).toList(),
+                  onChanged: (Currency? newValue) {
+                    if (newValue == null) {
+                      return;
+                    }
+                    setState(() {
+                      _prefferedCurrency = newValue;
+                    });
+                  },
                 ),
+
                 label: const Text(
                   'Amount',
                   style: TextStyle(
@@ -251,15 +277,15 @@ class _NewExpensePageState extends State<NewExpensePage> {
                   ),
                 ),
               ),
-              child: const Row(
+              child: Row(
                 children: [
-                  Icon(Icons.travel_explore),
-                  SizedBox(
+                  const Icon(Icons.travel_explore),
+                  const SizedBox(
                     width: 8,
                   ),
                   Text(
-                    'Trip Assignment',
-                    style: TextStyle(
+                    _trip == null ? 'Trip Assignment' : _trip!,
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),

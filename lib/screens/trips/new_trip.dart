@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flypro_expense_tracker/components/textform_field.dart';
+import 'package:flypro_expense_tracker/models/expense_model.dart';
+import 'package:flypro_expense_tracker/models/trip_model.dart';
+import 'package:flypro_expense_tracker/widgets/textform_field.dart';
 
 class NewTrip extends StatefulWidget {
   const NewTrip({super.key});
@@ -11,6 +13,10 @@ class NewTrip extends StatefulWidget {
 class _NewTripState extends State<NewTrip> {
   DateTime? startDate;
   DateTime? endDate;
+  var _tripName = '';
+  var _tripBudget = 6.0;
+  var _tripDescription = '';
+  var _tripDestination = '';
 
   //  TRIP STARTdate picker function
   Future<void> _selectStartDate() async {
@@ -38,6 +44,29 @@ class _NewTripState extends State<NewTrip> {
     });
   }
 
+  // save foem fucntion
+  void _saveForm() {
+    if (endDate == null && startDate == null) {
+      return;
+    }
+    _formKey.currentState!.validate();
+    _formKey.currentState!.save();
+    Navigator.of(context).pop(
+      Trip(
+        desription: _tripDescription,
+        budget: _tripBudget,
+        name: _tripName,
+        destination: _tripDestination,
+        endDate: endDate!,
+        startDate: startDate!,
+        currency: Currency.ngn,
+        expenseCount: 0,
+        status: 'active',
+        totalSpent: 0,
+      ),
+    );
+  }
+
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -58,18 +87,30 @@ class _NewTripState extends State<NewTrip> {
           key: _formKey,
           child: Column(
             children: [
-              const InputTextField(
+              InputTextField(
+                onSaved: (value) {
+                  _tripName = value!;
+                },
                 inputText: 'Trip name',
                 errorMsg: 'please enter your trip name',
               ),
-              const InputTextField(
+
+              InputTextField(
+                onSaved: (value) {
+                  _tripDestination = value!;
+                },
                 inputText: 'Destination',
                 errorMsg: 'Please, enter your trip destination',
               ),
-              const InputTextField(
+              InputTextField(
+                onSaved: (value) {
+                  _tripBudget = double.parse(value!);
+                },
                 inputText: 'Trip budget',
                 errorMsg: 'Please input yout trip budget',
-                keyboardType: TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
               ),
               Row(
                 children: [
@@ -77,7 +118,7 @@ class _NewTripState extends State<NewTrip> {
                       ? Expanded(
                           child: ElevatedButton.icon(
                             label: const Text(
-                              'Pick Date',
+                              'Pick Start Date',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -112,7 +153,7 @@ class _NewTripState extends State<NewTrip> {
                       ? Expanded(
                           child: ElevatedButton.icon(
                             label: const Text(
-                              'Pick Date',
+                              'Pick End Date',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -141,20 +182,18 @@ class _NewTripState extends State<NewTrip> {
                         ),
                 ],
               ),
-              const InputTextField(
+              InputTextField(
                 inputText: 'Trip description',
                 errorMsg: 'please, enter trip description here',
+
+                onSaved: (value) {
+                  _tripDescription = value!;
+                },
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 child: ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Data submitted')),
-                      );
-                    }
-                  },
+                  onPressed: _saveForm,
                   child: const Text('Submit'),
                 ),
               ),

@@ -1,12 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flypro_expense_tracker/screens/Charts/expense_chart.dart';
-import 'package:flypro_expense_tracker/screens/Settings/user_profile.dart';
-import 'package:flypro_expense_tracker/screens/home/card_container.dart';
-import 'package:flypro_expense_tracker/screens/home/expense_item.dart';
+import 'package:flypro_expense_tracker/data/dummy_expenses.dart';
+import 'package:flypro_expense_tracker/data/dummy_trips.dart';
+import 'package:flypro_expense_tracker/widgets/card_container.dart';
+import 'package:flypro_expense_tracker/widgets/expense_item.dart';
 import 'package:flypro_expense_tracker/models/expense_model.dart';
 import 'package:flypro_expense_tracker/screens/Expense/new_expense_page.dart';
-import 'package:flypro_expense_tracker/screens/trips/all_trips.dart';
 // import 'package:flypro_expense_tracker/components/expense_item.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -17,7 +16,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String _prefferedCurrency = 'USD';
   //  add new expense function
   void _addNewExpense() {
     Navigator.push(
@@ -25,8 +23,6 @@ class _HomeScreenState extends State<HomeScreen> {
       MaterialPageRoute(
         builder: (context) => NewExpensePage(
           onAddExpense: _updateExpenseList,
-          currencyValue: _prefferedCurrency,
-          onChanged: _chooseCurrency,
         ),
       ),
     );
@@ -34,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _updateExpenseList(Expense expense) {
     setState(() {
-      _myExpenses.add(expense);
+      myExpenses.add(expense);
     });
   }
 
@@ -43,44 +39,8 @@ class _HomeScreenState extends State<HomeScreen> {
     FirebaseAuth.instance.signOut();
   }
 
-  final String _currencyValue = 'USD';
-  void _chooseCurrency(String? value) {
-    setState(() {
-      _prefferedCurrency = value!;
-    });
-  }
-
   final now = DateTime.now();
 
-  final List<Expense> _myExpenses = [
-    Expense(
-      amount: 20,
-      description: 'Silk scarf',
-      date: DateTime.now(),
-      category: Category.other,
-    ),
-    Expense(
-      amount: 240,
-      description: 'Lunch at Italian restaurant',
-      date: DateTime.now(),
-      category: Category.meals,
-    ),
-    Expense(
-      category: Category.accomodation,
-      amount: 300,
-      description: 'Women Confrence',
-      date: DateTime.now(),
-    ),
-  ];
-
-  List screens = [
-    const HomeScreen(),
-    const AllTrips(),
-    const ExpenseChart(),
-    const UserProfile(),
-  ];
-
-  int index = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -142,10 +102,10 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 16,
             ),
             // the cards
-            const Row(
+            Row(
               // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                CardContainer(
+                const CardContainer(
                   cardText: 'Expenses',
                   amount: 18800,
                   iconData: Icons.trending_down,
@@ -153,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 CardContainer(
                   cardText: 'Trip',
-                  amount: 1,
+                  amount: myTrips.length,
                   iconData: Icons.flight_takeoff,
                 ),
               ],
@@ -188,12 +148,11 @@ class _HomeScreenState extends State<HomeScreen> {
             Expanded(
               flex: 2,
               child: ListView.builder(
-                itemCount: _myExpenses.length,
+                itemCount: myExpenses.length,
                 itemBuilder: (context, index) => Padding(
                   padding: const EdgeInsets.all(4),
                   child: ExpenseItem(
-                    expense: _myExpenses[index],
-                    currency: _currencyValue,
+                    expense: myExpenses[index],
                   ),
                 ),
               ),
@@ -210,34 +169,6 @@ class _HomeScreenState extends State<HomeScreen> {
         child: const Icon(Icons.add),
       ),
 
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: index,  
-
-        onTap: (int index) {
-          setState(() {
-            screens[index];
-          });
-        },
-        items: [
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'home',
-          ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.flight_takeoff),
-            label: 'trips',
-          ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.money),
-            label: 'expense',
-          ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.notes),
-            label: 'budget',
-          ),
-        ],
-        type: BottomNavigationBarType.fixed,
-      ),
       drawer: const Drawer(),
     );
   }

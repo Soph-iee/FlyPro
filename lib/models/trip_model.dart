@@ -11,14 +11,23 @@ class Trip {
     required this.destination,
     required this.endDate,
     required this.startDate,
+    required this.currency,
+    required this.expenseCount,
+    required this.status,
+    required this.totalSpent,
   });
-
+  String? id;
   final String name;
   final double budget;
   final String desription;
   final String destination;
   final DateTime startDate;
   final DateTime endDate;
+  final int expenseCount;
+  final Currency currency;
+  final String status;
+  final double totalSpent;
+
   String get formattedStartDate {
     return formatter.format(startDate);
   }
