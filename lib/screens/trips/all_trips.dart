@@ -45,12 +45,12 @@ class _AllTripsState extends State<AllTrips> {
         title: const Text('Trips'),
       ),
       body: GridView.builder(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(10),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          childAspectRatio: 1,
-          crossAxisSpacing: 20,
-          mainAxisSpacing: 20,
+          childAspectRatio: 1.5,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
         ),
         itemCount: myTrips.length,
         itemBuilder: (context, index) => TripItem(

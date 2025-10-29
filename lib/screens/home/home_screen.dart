@@ -40,6 +40,14 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   final now = DateTime.now();
+  int _totalExpense = 0;
+
+  int _showTotalExpense() {
+    setState(() {
+      _totalExpense = totalExpense();
+    });
+    return _totalExpense;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,9 +113,9 @@ class _HomeScreenState extends State<HomeScreen> {
             Row(
               // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const CardContainer(
+                CardContainer(
                   cardText: 'Expenses',
-                  amount: 18800,
+                  amount: _showTotalExpense(),
                   iconData: Icons.trending_down,
                 ),
 
@@ -140,9 +148,9 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(
               height: 16,
             ),
-            const Text(
+            Text(
               'Recent Expenses',
-              style: TextStyle(fontSize: 24),
+              style: TextStyle(fontSize: 24, color: Colors.grey[600]),
             ),
 
             Expanded(
@@ -168,6 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onPressed: _addNewExpense,
         child: const Icon(Icons.add),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndDocked,
 
       drawer: const Drawer(),
     );

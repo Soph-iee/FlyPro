@@ -2,6 +2,7 @@ import 'package:flypro_expense_tracker/models/expense_model.dart';
 import 'package:intl/intl.dart';
 
 final fomatter = DateFormat.yMMMd();
+final digitFormatter = NumberFormat('#,###.##');
 
 class Trip {
   Trip({
@@ -34,5 +35,8 @@ class Trip {
 
   String get formattedEndDate {
     return formatter.format(endDate);
+  }
+  String get formattedAmount {
+    return digitFormatter.format(budget);
   }
 }

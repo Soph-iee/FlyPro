@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flypro_expense_tracker/data/dummy_expenses.dart';
 
 class CardContainer extends StatelessWidget {
   const CardContainer({
@@ -38,7 +39,7 @@ class CardContainer extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    amount.toString(),
+                    '${formatNumber(amount)}',
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 24,

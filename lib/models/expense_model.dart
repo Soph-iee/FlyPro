@@ -14,6 +14,7 @@ const categoryIcons = {
 };
 
 final formatter = DateFormat.yMMMd();
+final digitFormatter = NumberFormat('#,###.##');
 
 class Expense {
   Expense({
@@ -24,7 +25,7 @@ class Expense {
     required this.category,
     required this.description,
     required this.date,
-    this.notes
+    this.notes,
   });
 
   // final String id;
@@ -38,5 +39,9 @@ class Expense {
 
   String get formattedDate {
     return formatter.format(date);
+  }
+
+  String get formattedAmount {
+    return digitFormatter.format(amount);
   }
 }

@@ -47,7 +47,7 @@ class ExpenseItem extends StatelessWidget {
         style: const TextStyle(fontSize: 14),
       ),
       trailing: Text(
-        '${expense.currency.name.toUpperCase()} ${expense.amount}',
+        '${expense.currency.name.toUpperCase()} ${expense.formattedAmount}',
         style: const TextStyle(
           fontSize: 20,
           color: Color(0xFF6D1E18),

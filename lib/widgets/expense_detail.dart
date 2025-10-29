@@ -28,7 +28,7 @@ class ExpenseDetail extends StatelessWidget {
                       children: [
                         Text(
                           textAlign: TextAlign.center,
-                          ' ${expense.currency.name.toUpperCase()} ${expense.amount}',
+                          ' ${expense.currency.name.toUpperCase()} ${expense.formattedAmount}',
                           style: const TextStyle(
                             fontSize: 40,
                             color: Colors.white,
@@ -48,21 +48,25 @@ class ExpenseDetail extends StatelessWidget {
                     icon: categoryIcons[expense.category]!,
                     subtitle: expense.category.name,
                     title: 'Category',
+                    context: context,
                   ),
                   detailsRow(
                     icon: Icons.travel_explore_rounded,
                     subtitle: expense.tripId,
                     title: 'Trip',
+                    context: context,
                   ),
                   detailsRow(
                     icon: Icons.calendar_month_rounded,
                     subtitle: expense.formattedDate,
                     title: 'Date',
+                    context: context,
                   ),
                   detailsRow(
                     icon: Icons.note_alt_rounded,
                     subtitle: expense.description,
                     title: 'Details',
+                    context: context,
                   ),
                   detailsRow(
                     icon: Icons.notes_rounded,
@@ -70,6 +74,7 @@ class ExpenseDetail extends StatelessWidget {
                         ? 'No notes added'
                         : expense.notes!,
                     title: 'Notes',
+                    context: context,
                   ),
                 ],
               ),
@@ -98,16 +103,20 @@ class ExpenseDetail extends StatelessWidget {
     required String title,
     required String subtitle,
     required IconData icon,
+    required BuildContext context,
   }) {
     return ListTile(
       leading: Icon(icon),
       title: Text(
         title,
-        style: const TextStyle(fontSize: 24),
+        style: TextStyle(
+          fontSize: 18,
+          color: Theme.of(context).colorScheme.outline,
+        ),
       ),
       subtitle: Text(
         subtitle,
-        style: const TextStyle(fontSize: 18),
+        style: const TextStyle(fontSize: 20),
       ),
       trailing: const Icon(
         Icons.arrow_forward_ios_rounded,

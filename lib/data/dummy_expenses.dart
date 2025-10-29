@@ -1,8 +1,9 @@
 import 'package:flypro_expense_tracker/models/expense_model.dart';
+import 'package:intl/intl.dart';
 
 final List<Expense> myExpenses = [
   Expense(
-    amount: 20,
+    amount: 2000,
     description: 'Silk scarf',
     date: DateTime.now(),
     category: Category.other,
@@ -93,7 +94,7 @@ final List<Expense> myExpenses = [
 
   Expense(
     category: Category.other,
-    amount: 80,
+    amount: 8000,
     description: 'Boat tour and snorkeling',
     date: DateTime.now(),
     currency: Currency.usd,
@@ -140,3 +141,17 @@ final List<Expense> myExpenses = [
     notes: 'Enjoyed skyline view at sunset',
   ),
 ];
+
+String formatNumber(num number) {
+  final formatter = NumberFormat('#,###'); 
+  return formatter.format(number);
+}
+
+int totalExpense() {
+  int sum = 0;
+  for (final item in myExpenses) {
+    sum += item.amount;
+  }
+
+  return sum;
+}

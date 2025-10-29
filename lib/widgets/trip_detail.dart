@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flypro_expense_tracker/data/dummy_expenses.dart';
 import 'package:flypro_expense_tracker/models/trip_model.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -42,23 +43,35 @@ class TripDetail extends StatelessWidget {
                         softWrap: true,
                         maxLines: 2,
                         textAlign: TextAlign.center,
-                        style: const TextStyle(fontSize: 24, color: Colors.white),
+                        style: const TextStyle(
+                          fontSize: 24,
+                          color: Colors.white,
+                        ),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             'Destination \n ${trip.destination}',
-                            style: const TextStyle(fontSize: 18, color: Colors.white),
+                            style: const TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                            ),
                           ),
                           Text(
-                            'Budget \n ${trip.currency.name.toUpperCase()} ${trip.budget}',
-                            style: const TextStyle(fontSize: 18, color: Colors.white),
+                            'Budget \n ${trip.currency.name.toUpperCase()} ${trip.formattedAmount}',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                            ),
                           ),
 
                           Text(
-                            'Spent \n ${trip.currency.name.toUpperCase()} ${trip.totalSpent}',
-                            style: const TextStyle(fontSize: 18, color: Colors.white),
+                            'Spent \n ${trip.currency.name.toUpperCase()} ${formatNumber(trip.totalSpent)}',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                            ),
                           ),
                         ],
                       ),
@@ -83,5 +96,9 @@ class TripDetail extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget expensesList() {
+    return Text('data');
   }
 }

@@ -32,18 +32,21 @@ class TripItem extends StatelessWidget {
           children: [
             Text(
               trip.name,
-              style: const TextStyle(fontSize: 32, color: Colors.white),
+              style: TextStyle(fontSize: 24, color: Colors.grey[700]),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  trip.budget.toString(),
-                  style: const TextStyle(fontSize: 24),
+                  '${trip.currency.name.toUpperCase()} \n ${trip.formattedAmount}',
+                  maxLines: 2,
+                  softWrap: true,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 18),
                 ),
                 Text(
                   trip.destination,
-                  style: const TextStyle(fontSize: 20),
+                  style: const TextStyle(fontSize: 16),
                 ),
               ],
             ),
