@@ -5,7 +5,6 @@ import 'package:flypro_expense_tracker/data/dummy_trips.dart';
 import 'package:flypro_expense_tracker/widgets/category_grid.dart';
 import 'package:flypro_expense_tracker/widgets/receipt_picker.dart';
 import 'package:flypro_expense_tracker/models/expense_model.dart';
-import 'package:flypro_expense_tracker/screens/home/home_screen.dart';
 
 class NewExpensePage extends StatefulWidget {
   const NewExpensePage({
@@ -74,12 +73,7 @@ class _NewExpensePageState extends State<NewExpensePage> {
           notes: notes,
         ),
       );
-      Navigator.pop(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const HomeScreen(),
-        ),
-      );
+      Navigator.pop(context);
     }
   }
 
@@ -185,258 +179,260 @@ class _NewExpensePageState extends State<NewExpensePage> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Column(
-          children: [
-            // amount
-            TextField(
-              keyboardType: TextInputType.number,
-              controller: _amountController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  gapPadding: 16,
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                contentPadding: const EdgeInsets.all(0),
-                prefix: DropdownButton<Currency>(
-                  value: _prefferedCurrency,
-
-                  items: Currency.values.map((currency) {
-                    return DropdownMenuItem<Currency>(
-                      value: currency,
-                      child: Text(
-                        currency.name.toUpperCase(),
-                      ), // Use .name for the display text
-                    );
-                  }).toList(),
-                  onChanged: (Currency? newValue) {
-                    if (newValue == null) {
-                      return;
-                    }
-                    setState(() {
-                      _prefferedCurrency = newValue;
-                    });
-                  },
-                ),
-
-                label: const Text(
-                  'Amount',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Column(
+            children: [
+              // amount
+              TextField(
+                keyboardType: TextInputType.number,
+                controller: _amountController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    gapPadding: 16,
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
-                ),
-              ),
-            ),
+                  contentPadding: const EdgeInsets.all(0),
+                  prefix: DropdownButton<Currency>(
+                    value: _prefferedCurrency,
 
-            const SizedBox(
-              height: 8,
-            ),
+                    items: Currency.values.map((currency) {
+                      return DropdownMenuItem<Currency>(
+                        value: currency,
+                        child: Text(
+                          currency.name.toUpperCase(),
+                        ), // Use .name for the display text
+                      );
+                    }).toList(),
+                    onChanged: (Currency? newValue) {
+                      if (newValue == null) {
+                        return;
+                      }
+                      setState(() {
+                        _prefferedCurrency = newValue;
+                      });
+                    },
+                  ),
 
-            // category
-            OutlinedButton(
-              onPressed: _showCategory,
-              style: OutlinedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(
-                    8.0,
-                  ),
-                ),
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.category),
-                  const SizedBox(
-                    width: 8,
-                  ),
-                  Text(
-                    selectedCategory == null
-                        ? 'Category'
-                        : selectedCategory!.name,
-                    style: const TextStyle(
+                  label: const Text(
+                    'Amount',
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                ],
-              ),
-            ),
-
-            const SizedBox(
-              height: 8,
-            ),
-
-            // trip assignement
-            OutlinedButton(
-              onPressed: _showTrips,
-              style: OutlinedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(
-                    8.0,
-                  ),
                 ),
               ),
-              child: Row(
-                children: [
-                  const Icon(Icons.travel_explore),
-                  const SizedBox(
-                    width: 8,
-                  ),
-                  Text(
-                    _trip == null ? 'Trip Assignment' : _trip!,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+
+              const SizedBox(
+                height: 8,
+              ),
+
+              // category
+              OutlinedButton(
+                onPressed: _showCategory,
+                style: OutlinedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                      8.0,
                     ),
                   ),
-                ],
-              ),
-            ),
-
-            const SizedBox(
-              height: 8,
-            ),
-
-            // description
-            TextField(
-              keyboardType: TextInputType.text,
-              controller: _descriptionController,
-              maxLength: 20,
-              decoration: InputDecoration(
-                contentPadding: const EdgeInsets.all(0),
-                border: OutlineInputBorder(
-                  gapPadding: 16,
-                  borderRadius: BorderRadius.circular(8.0),
                 ),
-                label: const Text(
-                  'Description',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 2,
-            ),
-
-            // notes
-            TextField(
-              keyboardType: TextInputType.text,
-              controller: _notesController,
-              decoration: InputDecoration(
-                contentPadding: const EdgeInsets.all(0),
-                border: OutlineInputBorder(
-                  gapPadding: 16,
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                label: const Text(
-                  'Notes',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                hintText: 'add notes here ...',
-              ),
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-
-            Row(
-              children: [
-                selectedDate == null
-                    ? Expanded(
-                        child: ElevatedButton.icon(
-                          label: const Text(
-                            'Pick Date',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Theme.of(
-                              context,
-                            ).colorScheme.primary,
-                            foregroundColor: Colors.white,
-                          ),
-                          onPressed: _selectDate,
-                          icon: const Icon(
-                            Icons.calendar_month_rounded,
-                            size: 24,
-                          ),
-                        ),
-                      )
-                    : Text(
-                        '${selectedDate!.day} / ${selectedDate!.month} / ${selectedDate!.year} ',
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          // decoration: TextDecoration.underline,
-                        ),
-                      ),
-
-                const SizedBox(
-                  width: 16,
-                ),
-                Expanded(
-                  child: ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(
-                        context,
-                      ).colorScheme.primary,
-                      foregroundColor: Colors.white,
+                child: Row(
+                  children: [
+                    const Icon(Icons.category),
+                    const SizedBox(
+                      width: 8,
                     ),
-                    onPressed: _showImagePicker,
-                    label: const Text(
-                      'Add Receipt',
-                      style: TextStyle(
+                    Text(
+                      selectedCategory == null
+                          ? 'Category'
+                          : selectedCategory!.name,
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    icon: const Icon(
-                      Icons.camera_alt,
-                      size: 24,
+                  ],
+                ),
+              ),
+
+              const SizedBox(
+                height: 8,
+              ),
+
+              // trip assignement
+              OutlinedButton(
+                onPressed: _showTrips,
+                style: OutlinedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                      8.0,
                     ),
                   ),
                 ),
-              ],
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            Container(
-              padding: const EdgeInsets.all(16),
-              width: double.infinity,
-              // height: 300.0,
-              margin: const EdgeInsets.only(bottom: 32),
-              color: Colors.grey[200],
-              child: _receiptImage != null
-                  ? Image.file(
-                      _receiptImage!,
-                      height: 250,
-                      width: 250,
-                    )
-                  : GestureDetector(
-                      onTap: _showImagePicker,
-                      child: const Center(
-                        child: Text(
-                          'Upload your receipt image here ',
-                          style: TextStyle(
+                child: Row(
+                  children: [
+                    const Icon(Icons.travel_explore),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    Text(
+                      _trip == null ? 'Trip Assignment' : _trip!,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(
+                height: 8,
+              ),
+
+              // description
+              TextField(
+                keyboardType: TextInputType.text,
+                controller: _descriptionController,
+                maxLength: 20,
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.all(0),
+                  border: OutlineInputBorder(
+                    gapPadding: 16,
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  label: const Text(
+                    'Description',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 2,
+              ),
+
+              // notes
+              TextField(
+                keyboardType: TextInputType.text,
+                controller: _notesController,
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.all(0),
+                  border: OutlineInputBorder(
+                    gapPadding: 16,
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  label: const Text(
+                    'Notes',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  hintText: 'add notes here ...',
+                ),
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+
+              Row(
+                children: [
+                  selectedDate == null
+                      ? Expanded(
+                          child: ElevatedButton.icon(
+                            label: const Text(
+                              'Pick Date',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Theme.of(
+                                context,
+                              ).colorScheme.primary,
+                              foregroundColor: Colors.white,
+                            ),
+                            onPressed: _selectDate,
+                            icon: const Icon(
+                              Icons.calendar_month_rounded,
+                              size: 24,
+                            ),
+                          ),
+                        )
+                      : Text(
+                          '${selectedDate!.day} / ${selectedDate!.month} / ${selectedDate!.year} ',
+                          style: const TextStyle(
+                            fontSize: 20,
                             fontWeight: FontWeight.bold,
-                            fontSize: 16,
+                            // decoration: TextDecoration.underline,
+                          ),
+                        ),
+
+                  const SizedBox(
+                    width: 16,
+                  ),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(
+                          context,
+                        ).colorScheme.primary,
+                        foregroundColor: Colors.white,
+                      ),
+                      onPressed: _showImagePicker,
+                      label: const Text(
+                        'Add Receipt',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      icon: const Icon(
+                        Icons.camera_alt,
+                        size: 24,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              Container(
+                padding: const EdgeInsets.all(16),
+                width: double.infinity,
+                // height: 300.0,
+                margin: const EdgeInsets.only(bottom: 32),
+                color: Colors.grey[200],
+                child: _receiptImage != null
+                    ? Image.file(
+                        _receiptImage!,
+                        height: 250,
+                        width: 250,
+                      )
+                    : GestureDetector(
+                        onTap: _showImagePicker,
+                        child: const Center(
+                          child: Text(
+                            'Upload your receipt image here ',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
     );

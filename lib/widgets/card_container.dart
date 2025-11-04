@@ -39,7 +39,7 @@ class CardContainer extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    '${formatNumber(amount)}',
+                    formatNumber(amount),
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 24,

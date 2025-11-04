@@ -9,7 +9,9 @@ import 'package:flypro_expense_tracker/screens/Expense/new_expense_page.dart';
 // import 'package:flypro_expense_tracker/components/expense_item.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({super.key, this.userName});
+
+  final String? userName;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -94,9 +96,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: Theme.of(context).colorScheme.outline,
                       ),
                     ),
-                    const Text(
-                      'John Doe',
-                      style: TextStyle(
+                    Text(
+                      widget.userName!,
+                      style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),

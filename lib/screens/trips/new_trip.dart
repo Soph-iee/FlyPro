@@ -46,10 +46,11 @@ class _NewTripState extends State<NewTrip> {
 
   // save foem fucntion
   void _saveForm() {
+    _formKey.currentState!.validate();
     if (endDate == null && startDate == null) {
       return;
     }
-    _formKey.currentState!.validate();
+
     _formKey.currentState!.save();
     Navigator.of(context).pop(
       Trip(

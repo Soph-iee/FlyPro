@@ -8,7 +8,7 @@ final List<Expense> myExpenses = [
     date: DateTime.now(),
     category: Category.other,
     currency: Currency.usd,
-    tripId: 'paris',
+    tripId: 'Dubai',
   ),
   Expense(
     amount: 240,
@@ -16,7 +16,7 @@ final List<Expense> myExpenses = [
     date: DateTime.now(),
     category: Category.meals,
     currency: Currency.ngn,
-    tripId: 'bali',
+    tripId: 'Bali',
   ),
   Expense(
     category: Category.accomodation,
@@ -24,7 +24,7 @@ final List<Expense> myExpenses = [
     description: 'Women Confrence',
     date: DateTime.now(),
     currency: Currency.eur,
-    tripId: 'zanzibar',
+    tripId: 'Zanzibar',
   ),
 
   Expense(
@@ -143,7 +143,7 @@ final List<Expense> myExpenses = [
 ];
 
 String formatNumber(num number) {
-  final formatter = NumberFormat('#,###'); 
+  final formatter = NumberFormat('#,###');
   return formatter.format(number);
 }
 

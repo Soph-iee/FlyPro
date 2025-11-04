@@ -1,8 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:flypro_expense_tracker/layout.dart';
 import 'package:flypro_expense_tracker/widgets/text_field.dart';
 import 'package:flypro_expense_tracker/widgets/primary_btn.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flypro_expense_tracker/pages/register_page.dart';
+import 'package:flypro_expense_tracker/pages/forgot_password.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -12,37 +16,67 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // log user in method
-  void logUserIn() async {
-    // show loading circle
-    // showDialog(
-    //   context: context,
-    //   builder: (ctx) {
-    //     return const Center(
-    //       child: CircularProgressIndicator(),
-    //     );
-    //   },
-    // );
-    // final navigator = Navigator.of(context);
-    // try login
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
-      // navigator.pop(context);
-    } on FirebaseAuthException catch (e) {
-      // wrong username message
-      if (e.code == 'user-not-found') {
-        errorMessage('user not found');
-      }
-      // wrong password message
-      else if (e.code == 'wrong-password') {
-        errorMessage('Please, input the correct password');
-      }
-    }
-    // Navigator.pop(context);
+  List<Map<String, String>> _allowedUsers = [];
+  bool _obscurePassword = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAllowedUsers();
   }
+
+  Future<void> _loadAllowedUsers() async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? stored = prefs.getString('users');
+      if (stored == null || stored.isEmpty) {
+        final String jsonString = await rootBundle.loadString(
+          'assets/data/users.json',
+        );
+        stored = jsonString;
+        await prefs.setString('users', stored);
+      }
+      final List<dynamic> data = json.decode(stored) as List<dynamic>;
+      setState(() {
+        _allowedUsers = data
+            .whereType<Map<String, dynamic>>()
+            .map(
+              (e) => <String, String>{
+                'email': (e['email'] ?? '').toString().trim().toLowerCase(),
+                'password': (e['password'] ?? '').toString(),
+                'name': (e['name'] ?? '').toString(),
+              },
+            )
+            .toList();
+      });
+    } catch (e) {
+      errorMessage('Failed to load users.json');
+    }
+  }
+
+  void logUserIn() {
+    final String inputEmail = emailController.text.trim().toLowerCase();
+    final String inputPassword = passwordController.text;
+
+    final Map<String, String> matchedUser = _allowedUsers.firstWhere(
+      (user) =>
+          user['email'] == inputEmail && user['password'] == inputPassword,
+      orElse: () => <String, String>{},
+    );
+
+    if (matchedUser.isNotEmpty) {
+      final String userName = matchedUser['name']!;
+
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => Layout(userName: userName)),
+      );
+    } else {
+      errorMessage('Invalid credentials');
+    }
+  }
+
+  Future<void> _handleForgotPassword() =>
+      ForgotPasswordFlow.handleForgotPassword(context);
 
   void errorMessage(String data) {
     showDialog(
@@ -100,7 +134,17 @@ class _LoginPageState extends State<LoginPage> {
             MyTextfield(
               controller: passwordController,
               hintText: "password",
-              obscureText: true,
+              obscureText: _obscurePassword,
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _obscurePassword = !_obscurePassword;
+                  });
+                },
+              ),
             ),
             const SizedBox(
               height: 25,
@@ -111,9 +155,12 @@ class _LoginPageState extends State<LoginPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text(
-                    'Forgot Password?',
-                    style: TextStyle(color: Colors.grey[600]),
+                  TextButton(
+                    onPressed: _handleForgotPassword,
+                    child: Text(
+                      'Forgot Password?',
+                      style: TextStyle(color: Colors.grey[600]),
+                    ),
                   ),
                 ],
               ),
@@ -127,14 +174,20 @@ class _LoginPageState extends State<LoginPage> {
               height: 25,
             ),
             // NOT A USER? SIGN IN
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Not a User?'),
-
-                Text(
-                  ' Sign In',
-                  style: TextStyle(color: Colors.blue, fontSize: 16),
+                const Text('Not a User?'),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const RegisterPage()),
+                    );
+                  },
+                  child: const Text(
+                    ' Sign In',
+                    style: TextStyle(color: Colors.blue, fontSize: 16),
+                  ),
                 ),
               ],
             ),

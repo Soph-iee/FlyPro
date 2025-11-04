@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flypro_expense_tracker/data/dummy_expenses.dart';
+import 'package:flypro_expense_tracker/models/expense_model.dart';
 import 'package:flypro_expense_tracker/models/trip_model.dart';
+import 'package:flypro_expense_tracker/widgets/expense_item.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class TripDetail extends StatelessWidget {
@@ -8,8 +10,17 @@ class TripDetail extends StatelessWidget {
 
   final Trip trip;
 
+  // List<Product> electronicProducts = allProducts
+  //     .where((product) => product.category == targetCategory)
+  //     .toList();
+
   @override
   Widget build(BuildContext context) {
+    final String targetTrip = trip.destination;
+    List<Expense> eachTripExpense = myExpenses
+        .where((expense) => expense.tripId == targetTrip)
+        .toList();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(trip.name),
@@ -93,12 +104,25 @@ class TripDetail extends StatelessWidget {
               ),
             ],
           ),
+          const SizedBox(
+            height: 12,
+          ),
+
+          Expanded(child: expensesList(eachTripExpense: eachTripExpense)),
         ],
       ),
     );
   }
 
-  Widget expensesList() {
-    return Text('data');
+  Widget expensesList({required List<Expense> eachTripExpense}) {
+    return ListView.builder(
+      itemCount: eachTripExpense.length,
+      itemBuilder: (context, index) => Padding(
+        padding: const EdgeInsets.all(4),
+        child: eachTripExpense.isNotEmpty
+            ? ExpenseItem(expense: eachTripExpense[index])
+            : const Text('No expense data for this trip'),
+      ),
+    );
   }
 }

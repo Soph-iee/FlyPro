@@ -1,0 +1,8 @@
+[
+  { "email": "john@flypro.com", "password": "password123", "name": "John Doe" },
+  {
+    "email": "sarah@flypro.com",
+    "password": "password123",
+    "name": "Sarah Chen"
+  }
+]
