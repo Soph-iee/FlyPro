@@ -74,13 +74,6 @@ class _NewTripState extends State<NewTrip> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add New Trip'),
-        actions: [
-          TextButton.icon(
-            onPressed: () {},
-            label: const Text('Save'),
-            icon: const Icon(Icons.check),
-          ),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flypro_expense_tracker/pages/login_page.dart';
-import 'firebase_options.dart';
+import 'package:flypro_expense_tracker/screens/pages/auth_gate.dart';
+import 'package:flypro_expense_tracker/providers/expense_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+void main() {
+  runApp(
+    ChangeNotifierProvider(
+      child: const MyApp(),
+      create: (context) => ExpenseProvider(),
+    ),
   );
-  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(context) {
     return MaterialApp(
-      home: const LoginPage(),
+      home: const AuthGate(),
       title: 'expense tracker',
       theme: ThemeData(
         textTheme: GoogleFonts.latoTextTheme(),

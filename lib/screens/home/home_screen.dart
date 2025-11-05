@@ -1,12 +1,15 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flypro_expense_tracker/models/trip_model.dart';
+import 'package:flypro_expense_tracker/providers/expense_provider.dart';
+import 'package:flypro_expense_tracker/screens/Expense/all_expenses.dart';
+import 'package:flypro_expense_tracker/screens/trips/new_trip.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flypro_expense_tracker/data/dummy_expenses.dart';
 import 'package:flypro_expense_tracker/data/dummy_trips.dart';
 import 'package:flypro_expense_tracker/widgets/card_container.dart';
 import 'package:flypro_expense_tracker/widgets/expense_item.dart';
-import 'package:flypro_expense_tracker/models/expense_model.dart';
 import 'package:flypro_expense_tracker/screens/Expense/new_expense_page.dart';
-// import 'package:flypro_expense_tracker/components/expense_item.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, this.userName});
@@ -23,22 +26,37 @@ class _HomeScreenState extends State<HomeScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => NewExpensePage(
-          onAddExpense: _updateExpenseList,
-        ),
+        builder: (context) => const NewExpensePage(),
       ),
     );
   }
 
-  void _updateExpenseList(Expense expense) {
+  // adding new trip button function
+  void _addNewtrip() async {
+    final newTripItem =
+        await Navigator.of(
+          context,
+        ).push<Trip>(
+          MaterialPageRoute(
+            builder: (ctx) => const NewTrip(),
+          ),
+        );
+    if (newTripItem == null) {
+      return;
+    }
     setState(() {
-      myExpenses.add(expense);
+      myTrips.add(newTripItem);
     });
   }
 
+  // updating expense list functi
+
   // sign out function
-  void _signUserOut() {
-    FirebaseAuth.instance.signOut();
+  Future<void> _signUserOut() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('session');
+    if (!mounted) return;
+    Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
   }
 
   final now = DateTime.now();
@@ -51,8 +69,12 @@ class _HomeScreenState extends State<HomeScreen> {
     return _totalExpense;
   }
 
+  // floating action button condition
+  bool _showOptions = false;
+
   @override
   Widget build(BuildContext context) {
+    ExpenseProvider expenseProvider = Provider.of<ExpenseProvider>(context);
     return Scaffold(
       backgroundColor: const Color(0xfff9fafb),
       appBar: AppBar(
@@ -113,7 +135,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             // the cards
             Row(
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 CardContainer(
                   cardText: 'Expenses',
@@ -150,19 +171,29 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(
               height: 16,
             ),
-            Text(
-              'Recent Expenses',
-              style: TextStyle(fontSize: 24, color: Colors.grey[600]),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (ctx) => const AllExpensesPage(),
+                  ),
+                );
+              },
+              child: Text(
+                'Recent Expenses',
+                style: TextStyle(fontSize: 24, color: Colors.grey[600]),
+              ),
             ),
 
             Expanded(
               flex: 2,
               child: ListView.builder(
-                itemCount: myExpenses.length,
+                itemCount: expenseProvider.items.length,
                 itemBuilder: (context, index) => Padding(
                   padding: const EdgeInsets.all(4),
                   child: ExpenseItem(
-                    expense: myExpenses[index],
+                    expense: expenseProvider.items[index],
                   ),
                 ),
               ),
@@ -174,12 +205,36 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _addNewExpense,
-        child: const Icon(Icons.add),
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (_showOptions) ...[
+            FloatingActionButton.extended(
+              onPressed: _addNewExpense,
+              heroTag: 'expense',
+              tooltip: 'Add Expense',
+              label: const Text('Add Expense'),
+              icon: const Icon(Icons.money),
+            ),
+            const SizedBox(height: 8),
+            FloatingActionButton.extended(
+              onPressed: _addNewtrip,
+              heroTag: 'trip',
+              tooltip: 'Add Trip',
+              label: const Text('Add Trip'),
+              icon: const Icon(Icons.flight_takeoff),
+            ),
+            const SizedBox(height: 24),
+          ],
+          FloatingActionButton(
+            onPressed: () => setState(() {
+              _showOptions = !_showOptions;
+            }),
+            child: const Icon(Icons.add),
+          ),
+        ],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndDocked,
-
+      floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
       drawer: const Drawer(),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 
 enum Category { travel, meals, accomodation, transport, other }
 
@@ -12,13 +13,13 @@ const categoryIcons = {
   Category.transport: Icons.local_taxi,
   Category.other: Icons.category,
 };
+final uuid = const Uuid();
 
 final formatter = DateFormat.yMMMd();
 final digitFormatter = NumberFormat('#,###.##');
 
 class Expense {
   Expense({
-    // required this.id,
     required this.amount,
     required this.currency,
     required this.tripId,
@@ -26,9 +27,9 @@ class Expense {
     required this.description,
     required this.date,
     this.notes,
-  });
+  }) : id = uuid.v4();
 
-  // final String id;
+  final String id;
   final int amount;
   final Currency currency;
   final String tripId;

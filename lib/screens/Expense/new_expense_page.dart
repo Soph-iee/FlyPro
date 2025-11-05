@@ -1,18 +1,17 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flypro_expense_tracker/data/dummy_trips.dart';
+import 'package:flypro_expense_tracker/providers/expense_provider.dart';
 import 'package:flypro_expense_tracker/widgets/category_grid.dart';
 import 'package:flypro_expense_tracker/widgets/receipt_picker.dart';
 import 'package:flypro_expense_tracker/models/expense_model.dart';
+import 'package:flypro_expense_tracker/widgets/trip_list_tile.dart';
+import 'package:provider/provider.dart';
 
 class NewExpensePage extends StatefulWidget {
   const NewExpensePage({
     super.key,
-    required this.onAddExpense,
   });
-
-  final void Function(Expense expense) onAddExpense;
 
   @override
   State<NewExpensePage> createState() => _NewExpensePageState();
@@ -62,7 +61,7 @@ class _NewExpensePageState extends State<NewExpensePage> {
         ),
       );
     } else {
-      widget.onAddExpense(
+      Provider.of<ExpenseProvider>(context, listen: false).addExpense(
         Expense(
           amount: amountEntered,
           description: validTitle,
@@ -89,30 +88,13 @@ class _NewExpensePageState extends State<NewExpensePage> {
   void _showTrips() {
     showModalBottomSheet(
       context: context,
-      builder: (ctx) => ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: myTrips.length,
-        itemBuilder: (context, index) => ListTile(
-          splashColor: Colors.blue,
-          onTap: () {
-            setState(() {
-              _trip = myTrips[index].destination;
-            });
-            Navigator.pop(context);
-          },
-          title: Text(
-            myTrips[index].name,
-            style: const TextStyle(fontSize: 16),
-          ),
-          subtitle: Text(
-            myTrips[index].destination,
-            style: const TextStyle(fontSize: 20),
-          ),
-          trailing: Text(
-            ' ${myTrips[index].currency.name.toUpperCase()} ${myTrips[index].budget}',
-            style: const TextStyle(fontSize: 16),
-          ),
-        ),
+      builder: (ctx) => TripListTile(
+        onTap: ( int index) {
+          setState(() {
+            _trip = myTrips[index].destination;
+          });
+          // Navigator.pop(context);
+        },
       ),
     );
   }

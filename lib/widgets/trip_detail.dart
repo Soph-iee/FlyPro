@@ -108,19 +108,30 @@ class TripDetail extends StatelessWidget {
             height: 12,
           ),
 
-          Expanded(child: expensesList(eachTripExpense: eachTripExpense)),
+          Expanded(
+            child: expensesList(
+              eachTripExpense: eachTripExpense,
+              context: context,
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget expensesList({required List<Expense> eachTripExpense}) {
+  Widget expensesList({
+    required List<Expense> eachTripExpense,
+    required BuildContext context,
+  }) {
+    // ExpenseProvider expenseProvider = Provider.of<ExpenseProvider>(context);
     return ListView.builder(
       itemCount: eachTripExpense.length,
       itemBuilder: (context, index) => Padding(
         padding: const EdgeInsets.all(4),
         child: eachTripExpense.isNotEmpty
-            ? ExpenseItem(expense: eachTripExpense[index])
+            ? ExpenseItem(
+                expense: eachTripExpense[index],
+              )
             : const Text('No expense data for this trip'),
       ),
     );

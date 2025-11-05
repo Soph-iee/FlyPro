@@ -5,8 +5,8 @@ import 'package:flypro_expense_tracker/layout.dart';
 import 'package:flypro_expense_tracker/widgets/text_field.dart';
 import 'package:flypro_expense_tracker/widgets/primary_btn.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flypro_expense_tracker/pages/register_page.dart';
-import 'package:flypro_expense_tracker/pages/forgot_password.dart';
+import 'package:flypro_expense_tracker/screens/pages/register_page.dart';
+import 'package:flypro_expense_tracker/screens/pages/forgot_password.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -54,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  void logUserIn() {
+  Future<void> logUserIn() async {
     final String inputEmail = emailController.text.trim().toLowerCase();
     final String inputPassword = passwordController.text;
 
@@ -67,6 +67,17 @@ class _LoginPageState extends State<LoginPage> {
     if (matchedUser.isNotEmpty) {
       final String userName = matchedUser['name']!;
 
+      // Persist session
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString(
+        'session',
+        json.encode({
+          'email': inputEmail,
+          'name': userName,
+          'loggedInAt': DateTime.now().toIso8601String(),
+        }),
+      );
+      if (!mounted) return;
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => Layout(userName: userName)),
       );

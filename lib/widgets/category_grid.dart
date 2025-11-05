@@ -5,7 +5,11 @@ import 'package:flypro_expense_tracker/models/expense_model.dart';
 
 class CategoryGrid extends StatelessWidget {
   const CategoryGrid({super.key, required this.selectCategory});
+
+// the function that will be called when a category is selected
   final void Function(Category value) selectCategory;
+
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -32,7 +36,6 @@ class CategoryGrid extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  // final  value = Category.values[index].name;
                   selectCategory(Category.values[index]);
                   Navigator.pop(context);
                 },

@@ -6,10 +6,13 @@ class ForgotPasswordFlow {
   static Future<void> handleForgotPassword(BuildContext context) async {
     final String? email = await _promptEmail(context);
     if (email == null || email.trim().isEmpty) return;
+    if (!context.mounted) return;
     final String? newPass = await _promptNewPassword(context);
+
     if (newPass == null || newPass.isEmpty) return;
+    if (!context.mounted) return;
     final bool ok = await _resetPasswordForEmail(email, newPass);
-    // ignore: use_build_context_synchronously
+    if (!context.mounted) return;
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
