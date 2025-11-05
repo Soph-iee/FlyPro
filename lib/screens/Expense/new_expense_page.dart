@@ -9,18 +9,43 @@ import 'package:flypro_expense_tracker/widgets/trip_list_tile.dart';
 import 'package:provider/provider.dart';
 
 class NewExpensePage extends StatefulWidget {
-  const NewExpensePage({
-    super.key,
-  });
-
+  const NewExpensePage({this.expense, super.key});
+  final Expense? expense;
   @override
   State<NewExpensePage> createState() => _NewExpensePageState();
 }
 
 class _NewExpensePageState extends State<NewExpensePage> {
-  DateTime? selectedDate;
+  late final TextEditingController _amountController;
+  late final TextEditingController _descriptionController;
+  late final TextEditingController _notesController;
+
+  late Category? selectedCategory;
+  late Currency _prefferedCurrency;
+  late String? _trip;
+  late DateTime? selectedDate;
+  @override
+  void initState() {
+    super.initState();
+    final exp = widget.expense;
+    _amountController = TextEditingController(
+      text: exp?.amount.toString() ?? '',
+    );
+    _descriptionController = TextEditingController(
+      text: exp?.description ?? '',
+    );
+    _notesController = TextEditingController(
+      text: exp?.notes ?? '',
+    );
+    // _receiptImage = exp?.receiptImage;
+    selectedCategory = exp?.category;
+    _prefferedCurrency = exp?.currency ?? Currency.ngn;
+    _trip = exp?.tripId;
+    selectedDate = exp?.date;
+  }
 
   // date picker function
+  File? _receiptImage;
   Future<void> _selectDate() async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -35,45 +60,60 @@ class _NewExpensePageState extends State<NewExpensePage> {
 
   // add new expense
   void _addNewExpense() {
-    final amountEntered = int.tryParse(_amountController.text);
-    final validAmount = amountEntered == null || amountEntered <= 0;
-    final validTitle = _descriptionController.text.trim();
-    final notes = _notesController.text.trim();
-    if (validAmount ||
-        validTitle.isEmpty ||
-        selectedDate == null ||
-        selectedCategory == null ||
-        _trip == null) {
-      showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          icon: const Icon(Icons.error),
-          content: const Text('Please input valid data'),
-          title: const Text('Error'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(ctx).pop();
-              },
-              child: const Text('Ok'),
-            ),
-          ],
-        ),
-      );
+    if (widget.expense == null) {
+      final amountEntered = int.tryParse(_amountController.text);
+      final validAmount = amountEntered == null || amountEntered <= 0;
+      final validTitle = _descriptionController.text.trim();
+      final notes = _notesController.text.trim();
+      if (validAmount ||
+          validTitle.isEmpty ||
+          selectedDate == null ||
+          selectedCategory == null ||
+          _trip == null) {
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            icon: const Icon(Icons.error),
+            content: const Text('Please input valid data'),
+            title: const Text('Error'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                },
+                child: const Text('Ok'),
+              ),
+            ],
+          ),
+        );
+      } else {
+        Provider.of<ExpenseProvider>(context, listen: false).addExpense(
+          Expense(
+            amount: amountEntered,
+            description: validTitle,
+            date: selectedDate!,
+            category: selectedCategory!,
+            currency: _prefferedCurrency,
+            tripId: _trip!,
+            notes: notes,
+          ),
+        );
+      }
     } else {
-      Provider.of<ExpenseProvider>(context, listen: false).addExpense(
-        Expense(
-          amount: amountEntered,
-          description: validTitle,
-          date: selectedDate!,
-          category: selectedCategory!,
+      Provider.of<ExpenseProvider>(context, listen: false).updateExpense(
+        widget.expense!.id, // 🔥 keep same ID
+        widget.expense!.copyWith(
+          amount: int.parse(_amountController.text),
+          description: _descriptionController.text,
+          date: selectedDate,
+          category: selectedCategory,
           currency: _prefferedCurrency,
-          tripId: _trip!,
-          notes: notes,
+          tripId: _trip,
+          notes: _notesController.text,
         ),
       );
-      Navigator.pop(context);
     }
+    Navigator.pop(context);
   }
 
   void _showCategory() {
@@ -89,7 +129,7 @@ class _NewExpensePageState extends State<NewExpensePage> {
     showModalBottomSheet(
       context: context,
       builder: (ctx) => TripListTile(
-        onTap: ( int index) {
+        onTap: (int index) {
           setState(() {
             _trip = myTrips[index].destination;
           });
@@ -121,15 +161,6 @@ class _NewExpensePageState extends State<NewExpensePage> {
     });
     // print(widget.currencyValue);
   }
-
-  final _amountController = TextEditingController();
-  final _descriptionController = TextEditingController();
-  final _notesController = TextEditingController();
-
-  File? _receiptImage;
-  Category? selectedCategory;
-  Currency _prefferedCurrency = Currency.cad;
-  String? _trip;
 
   @override
   void dispose() {
@@ -279,7 +310,6 @@ class _NewExpensePageState extends State<NewExpensePage> {
               TextField(
                 keyboardType: TextInputType.text,
                 controller: _descriptionController,
-                maxLength: 20,
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.all(0),
                   border: OutlineInputBorder(

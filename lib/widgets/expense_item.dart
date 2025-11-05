@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flypro_expense_tracker/models/expense_model.dart';
 import 'package:flypro_expense_tracker/providers/expense_provider.dart';
+import 'package:flypro_expense_tracker/screens/Expense/new_expense_page.dart';
 import 'package:flypro_expense_tracker/widgets/expense_detail.dart';
 import 'package:provider/provider.dart';
 
 class ExpenseItem extends StatelessWidget {
-  const ExpenseItem({super.key, required this.expense, r});
+  const ExpenseItem({
+    super.key,
+    required this.expense,
+  });
 
   final Expense expense;
 
@@ -53,7 +57,14 @@ class ExpenseItem extends StatelessWidget {
       ),
       confirmDismiss: (direction) async {
         if (direction == DismissDirection.startToEnd) {
-          expenseProvider.editExpense(context, expense);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (ctx) => NewExpensePage(
+                expense: expense,
+              ),
+            ),
+          );
           return false; // don't dismiss on edit
         }
         return true; // allow dismiss on delete (endToStart)

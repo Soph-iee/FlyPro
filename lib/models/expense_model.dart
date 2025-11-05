@@ -19,6 +19,15 @@ final formatter = DateFormat.yMMMd();
 final digitFormatter = NumberFormat('#,###.##');
 
 class Expense {
+  final String id;
+  final int amount;
+  final Currency currency;
+  final String tripId;
+  final Category category;
+  final String description;
+  final DateTime date;
+  String? notes;
+
   Expense({
     required this.amount,
     required this.currency,
@@ -29,14 +38,25 @@ class Expense {
     this.notes,
   }) : id = uuid.v4();
 
-  final String id;
-  final int amount;
-  final Currency currency;
-  final String tripId;
-  final Category category;
-  final String description;
-  final DateTime date;
-  String? notes;
+  Expense copyWith({
+    int? amount,
+    String? description,
+    DateTime? date,
+    Category? category,
+    Currency? currency,
+    String? tripId,
+    String? notes,
+  }) {
+    return Expense(
+      amount: amount ?? this.amount,
+      description: description ?? this.description,
+      date: date ?? this.date,
+      category: category ?? this.category,
+      currency: currency ?? this.currency,
+      tripId: tripId ?? this.tripId,
+      notes: notes ?? this.notes,
+    );
+  }
 
   String get formattedDate {
     return formatter.format(date);
