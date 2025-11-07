@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flypro_expense_tracker/models/expense_model.dart';
+import 'package:flypro_expense_tracker/screens/Expense/new_expense_page.dart';
 
 class ExpenseDetail extends StatelessWidget {
   const ExpenseDetail({super.key, required this.expense});
@@ -88,7 +89,16 @@ class ExpenseDetail extends StatelessWidget {
                     iconSize: 32,
                   ),
 
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (ctx) => NewExpensePage(
+                          expense: expense,
+                        ),
+                      ),
+                    );
+                  },
                   label: const Icon(Icons.edit_note_rounded),
                 ),
               ],

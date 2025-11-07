@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flypro_expense_tracker/data/dummy_expenses.dart';
 import 'package:flypro_expense_tracker/models/expense_model.dart';
 import 'package:flypro_expense_tracker/models/trip_model.dart';
+import 'package:flypro_expense_tracker/providers/expense_provider.dart';
+import 'package:flypro_expense_tracker/screens/Charts/expense_chart.dart';
 import 'package:flypro_expense_tracker/widgets/expense_item.dart';
+import 'package:provider/provider.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class TripDetail extends StatelessWidget {
@@ -10,14 +13,11 @@ class TripDetail extends StatelessWidget {
 
   final Trip trip;
 
-  // List<Product> electronicProducts = allProducts
-  //     .where((product) => product.category == targetCategory)
-  //     .toList();
-
   @override
   Widget build(BuildContext context) {
+    ExpenseProvider expenseProvider = Provider.of<ExpenseProvider>(context);
     final String targetTrip = trip.destination;
-    List<Expense> eachTripExpense = myExpenses
+    List<Expense> eachTripExpense = expenseProvider.items
         .where((expense) => expense.tripId == targetTrip)
         .toList();
 
@@ -114,6 +114,9 @@ class TripDetail extends StatelessWidget {
               context: context,
             ),
           ),
+          eachTripExpense.isNotEmpty
+              ? Expanded(child: ExpenseChart(expensesList: eachTripExpense))
+              : const SizedBox(),
         ],
       ),
     );

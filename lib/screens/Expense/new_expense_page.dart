@@ -326,7 +326,7 @@ class _NewExpensePageState extends State<NewExpensePage> {
                 ),
               ),
               const SizedBox(
-                height: 2,
+                height: 12,
               ),
 
               // notes

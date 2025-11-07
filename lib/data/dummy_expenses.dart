@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 
 final List<Expense> myExpenses = [
   Expense(
-    amount: 2000,
+    amount: 200,
     description: 'Silk scarf',
     date: DateTime.now(),
     category: Category.other,
@@ -94,7 +94,7 @@ final List<Expense> myExpenses = [
 
   Expense(
     category: Category.other,
-    amount: 8000,
+    amount: 800,
     description: 'Boat tour and snorkeling',
     date: DateTime.now(),
     currency: Currency.usd,
@@ -139,6 +139,72 @@ final List<Expense> myExpenses = [
     currency: Currency.usd,
     tripId: 'Dubai',
     notes: 'Enjoyed skyline view at sunset',
+  ),
+
+  // testing for date
+  Expense(
+    category: Category.transport,
+    amount: 150,
+    description: 'Airport taxi to villa',
+    date: DateTime.now().subtract(const Duration(days: 0)),
+    currency: Currency.usd,
+    tripId: 'Bali',
+  ),
+  Expense(
+    category: Category.transport,
+    amount: 80,
+    description: 'Scooter rental',
+    date: DateTime.now().subtract(const Duration(days: 1)),
+    currency: Currency.usd,
+    tripId: 'Bali',
+  ),
+  Expense(
+    category: Category.transport,
+    amount: 220,
+    description: 'Boat ride to island',
+    date: DateTime.now().subtract(const Duration(days: 2)),
+    currency: Currency.usd,
+    tripId: 'Bali',
+  ),
+  Expense(
+    category: Category.transport,
+    amount: 65,
+    description: 'Taxi to beach club',
+    date: DateTime.now().subtract(const Duration(days: 3)),
+    currency: Currency.usd,
+    tripId: 'Bali',
+  ),
+  Expense(
+    category: Category.transport,
+    amount: 140,
+    description: 'Private driver for the day',
+    date: DateTime.now().subtract(const Duration(days: 5)),
+    currency: Currency.usd,
+    tripId: 'Bali',
+  ),
+  Expense(
+    category: Category.transport,
+    amount: 45,
+    description: 'Quick scooter fuel top-up',
+    date: DateTime.now().subtract(const Duration(days: 7)),
+    currency: Currency.usd,
+    tripId: 'Bali',
+  ),
+  Expense(
+    category: Category.transport,
+    amount: 210,
+    description: 'Taxi to waterfall trail',
+    date: DateTime.now().subtract(const Duration(days: 10)),
+    currency: Currency.usd,
+    tripId: 'Bali',
+  ),
+  Expense(
+    category: Category.transport,
+    amount: 90,
+    description: 'Return taxi to hotel',
+    date: DateTime.now().subtract(const Duration(days: 14)),
+    currency: Currency.usd,
+    tripId: 'Bali',
   ),
 ];
 

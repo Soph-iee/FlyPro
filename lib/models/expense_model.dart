@@ -13,6 +13,15 @@ const categoryIcons = {
   Category.transport: Icons.local_taxi,
   Category.other: Icons.category,
 };
+
+final categoryColors = {
+  Category.meals: Colors.orange,
+  Category.transport: Colors.blue,
+  Category.travel: Colors.pink,
+  Category.accomodation: Colors.green, 
+  Category.other: Colors.grey,
+};
+
 final uuid = const Uuid();
 
 final formatter = DateFormat.yMMMd();
