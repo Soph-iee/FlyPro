@@ -1,12 +1,11 @@
-import 'package:flypro_expense_tracker/models/trip_model.dart';
 import 'package:flypro_expense_tracker/providers/expense_provider.dart';
+import 'package:flypro_expense_tracker/providers/trip_provider.dart';
 import 'package:flypro_expense_tracker/screens/Expense/all_expenses.dart';
 import 'package:flypro_expense_tracker/screens/trips/new_trip.dart';
+import 'package:flypro_expense_tracker/utils/formatter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
-import 'package:flypro_expense_tracker/data/dummy_expenses.dart';
-import 'package:flypro_expense_tracker/data/dummy_trips.dart';
 import 'package:flypro_expense_tracker/widgets/card_container.dart';
 import 'package:flypro_expense_tracker/widgets/expense_item.dart';
 import 'package:flypro_expense_tracker/screens/Expense/new_expense_page.dart';
@@ -31,24 +30,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // adding new trip button function
-  void _addNewtrip() async {
-    final newTripItem =
-        await Navigator.of(
-          context,
-        ).push<Trip>(
-          MaterialPageRoute(
-            builder: (ctx) => const NewTrip(),
-          ),
-        );
-    if (newTripItem == null) {
-      return;
-    }
-    setState(() {
-      myTrips.add(newTripItem);
-    });
-  }
-
   // updating expense list functi
 
   // sign out function
@@ -60,14 +41,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   final now = DateTime.now();
-  int _totalExpense = 0;
-
-  int _showTotalExpense() {
-    setState(() {
-      _totalExpense = totalExpense();
-    });
-    return _totalExpense;
-  }
 
   // floating action button condition
   bool _showOptions = false;
@@ -75,6 +48,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     ExpenseProvider expenseProvider = Provider.of<ExpenseProvider>(context);
+    TripProvider tripProvider = Provider.of<TripProvider>(context);
+
     return Scaffold(
       backgroundColor: const Color(0xfff9fafb),
       appBar: AppBar(
@@ -138,30 +113,30 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 CardContainer(
                   cardText: 'Expenses',
-                  amount: _showTotalExpense(),
+                  amount: int.parse(formatNumber(expenseProvider.totalExpense)),
                   iconData: Icons.trending_down,
                 ),
 
                 CardContainer(
                   cardText: 'Trip',
-                  amount: myTrips.length,
+                  amount: tripProvider.items.length,
                   iconData: Icons.flight_takeoff,
                 ),
               ],
             ),
 
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 CardContainer(
                   cardText: 'Pending',
-                  amount: 5,
+                  amount: tripProvider.pendingTrips().length,
                   iconData: Icons.travel_explore,
                 ),
 
                 CardContainer(
                   cardText: 'Savings',
-                  amount: 12840,
+                  amount: tripProvider.savings.toInt(),
                   iconData: Icons.money,
                 ),
               ],
@@ -218,7 +193,14 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 8),
             FloatingActionButton.extended(
-              onPressed: _addNewtrip,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (ctx) => const NewTrip(),
+                  ),
+                );
+              },
               heroTag: 'trip',
               tooltip: 'Add Trip',
               label: const Text('Add Trip'),

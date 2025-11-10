@@ -1,14 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:flypro_expense_tracker/screens/pages/auth_gate.dart';
+import 'package:flypro_expense_tracker/models/category.dart';
+import 'package:flypro_expense_tracker/models/currency.dart';
+import 'package:flypro_expense_tracker/models/expense_model.dart';
+import 'package:flypro_expense_tracker/models/trip_model.dart';
+import 'package:flypro_expense_tracker/models/trip_status.dart';
+import 'package:flypro_expense_tracker/providers/trip_provider.dart';
 import 'package:flypro_expense_tracker/providers/expense_provider.dart';
+import 'package:flypro_expense_tracker/screens/splash_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
+// import 'package:path_provider/path_provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // final appDocumentDir = await getApplicationDocumentsDirectory();
+  await Hive.initFlutter();
+  Hive.registerAdapter(TripAdapter());
+  Hive.registerAdapter(ExpenseAdapter());
+  Hive.registerAdapter(CurrencyAdapter());
+  Hive.registerAdapter(TripStatusAdapter());
+  Hive.registerAdapter(CategoryAdapter());
+
+  await Hive.openBox<Trip>('tripsBox');
+  await Hive.openBox<Expense>('expensesBox');
+
+
   runApp(
-    ChangeNotifierProvider(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => TripProvider()),
+        ChangeNotifierProvider(create: (_) => ExpenseProvider()),
+      ],
       child: const MyApp(),
-      create: (context) => ExpenseProvider(),
     ),
   );
 }
@@ -18,7 +42,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(context) {
     return MaterialApp(
-      home: const AuthGate(),
+      home: const SplashScreen(),
       title: 'expense tracker',
       theme: ThemeData(
         textTheme: GoogleFonts.latoTextTheme(),

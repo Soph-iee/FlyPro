@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flypro_expense_tracker/screens/charts/expense_chart.dart';
 import 'package:flypro_expense_tracker/screens/Settings/user_profile.dart';
 import 'package:flypro_expense_tracker/screens/charts/line_bar_chart.dart';
 import 'package:flypro_expense_tracker/screens/home/home_screen.dart';

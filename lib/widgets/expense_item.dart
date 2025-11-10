@@ -71,7 +71,7 @@ class ExpenseItem extends StatelessWidget {
       },
       onDismissed: (direction) {
         if (direction == DismissDirection.endToStart) {
-          expenseProvider.removeExpense(expense);
+          expenseProvider.removeExpense(expense.key);
         }
       },
       child: ListTile(

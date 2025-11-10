@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flypro_expense_tracker/models/currency.dart';
+import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
+
+part 'expense_model.g.dart';
+
 enum Category { travel, meals, accomodation, transport, other }
 
-enum Currency { usd, ngn, cad, gbp, eur }
+// enum Currency { usd, ngn, cad, gbp, eur }
 
 const categoryIcons = {
   Category.travel: Icons.flight_takeoff,
@@ -18,7 +23,7 @@ final categoryColors = {
   Category.meals: Colors.orange,
   Category.transport: Colors.blue,
   Category.travel: Colors.pink,
-  Category.accomodation: Colors.green, 
+  Category.accomodation: Colors.green,
   Category.other: Colors.grey,
 };
 
@@ -27,14 +32,24 @@ final uuid = const Uuid();
 final formatter = DateFormat.yMMMd();
 final digitFormatter = NumberFormat('#,###.##');
 
-class Expense {
+
+@HiveType(typeId: 0)
+class Expense extends HiveObject {
+  @HiveField(0)
   final String id;
+  @HiveField(1)
   final int amount;
+  @HiveField(2)
   final Currency currency;
+  @HiveField(3)
   final String tripId;
+  @HiveField(4)
   final Category category;
+  @HiveField(5)
   final String description;
+  @HiveField(6)
   final DateTime date;
+  @HiveField(7)
   String? notes;
 
   Expense({

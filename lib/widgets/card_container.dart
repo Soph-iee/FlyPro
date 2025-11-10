@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flypro_expense_tracker/data/dummy_expenses.dart';
+import 'package:flypro_expense_tracker/utils/formatter.dart';
 
 class CardContainer extends StatelessWidget {
   const CardContainer({

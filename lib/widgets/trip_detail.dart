@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flypro_expense_tracker/data/dummy_expenses.dart';
 import 'package:flypro_expense_tracker/models/expense_model.dart';
 import 'package:flypro_expense_tracker/models/trip_model.dart';
 import 'package:flypro_expense_tracker/providers/expense_provider.dart';
 import 'package:flypro_expense_tracker/screens/Charts/expense_chart.dart';
+import 'package:flypro_expense_tracker/utils/formatter.dart';
 import 'package:flypro_expense_tracker/widgets/expense_item.dart';
 import 'package:provider/provider.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -17,10 +17,9 @@ class TripDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     ExpenseProvider expenseProvider = Provider.of<ExpenseProvider>(context);
     final String targetTrip = trip.destination;
-    List<Expense> eachTripExpense = expenseProvider.items
-        .where((expense) => expense.tripId == targetTrip)
-        .toList();
-
+    List<Expense> eachTripExpense = expenseProvider.activeExpenseForTrip(
+      targetTrip,
+    );
     return Scaffold(
       appBar: AppBar(
         title: Text(trip.name),

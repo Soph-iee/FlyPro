@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flypro_expense_tracker/models/expense_model.dart';
+import 'package:flypro_expense_tracker/models/currency.dart';
 import 'package:flypro_expense_tracker/models/trip_model.dart';
+import 'package:flypro_expense_tracker/models/trip_status.dart';
+import 'package:flypro_expense_tracker/providers/trip_provider.dart';
+import 'package:flypro_expense_tracker/screens/trips/all_trips.dart';
 import 'package:flypro_expense_tracker/widgets/textform_field.dart';
+import 'package:provider/provider.dart';
 
 class NewTrip extends StatefulWidget {
   const NewTrip({super.key});
@@ -14,7 +18,7 @@ class _NewTripState extends State<NewTrip> {
   DateTime? startDate;
   DateTime? endDate;
   var _tripName = '';
-  var _tripBudget = 6.0;
+  var _tripBudget = 0.0;
   var _tripDescription = '';
   var _tripDestination = '';
 
@@ -52,7 +56,11 @@ class _NewTripState extends State<NewTrip> {
     }
 
     _formKey.currentState!.save();
-    Navigator.of(context).pop(
+    TripProvider tripProvider = Provider.of<TripProvider>(
+      context,
+      listen: false,
+    );
+    tripProvider.addTrip(
       Trip(
         desription: _tripDescription,
         budget: _tripBudget,
@@ -62,10 +70,15 @@ class _NewTripState extends State<NewTrip> {
         startDate: startDate!,
         currency: Currency.ngn,
         expenseCount: 0,
-        status: 'active',
+        status: TripStatus.pending,
         totalSpent: 0,
       ),
     );
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (ctx) => const AllTrips()),
+    );
+    _formKey.currentState!.reset();
   }
 
   final _formKey = GlobalKey<FormState>();

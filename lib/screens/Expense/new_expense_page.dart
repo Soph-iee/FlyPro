@@ -1,7 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flypro_expense_tracker/data/dummy_trips.dart';
+import 'package:flypro_expense_tracker/models/currency.dart';
 import 'package:flypro_expense_tracker/providers/expense_provider.dart';
+import 'package:flypro_expense_tracker/providers/trip_provider.dart';
 import 'package:flypro_expense_tracker/widgets/category_grid.dart';
 import 'package:flypro_expense_tracker/widgets/receipt_picker.dart';
 import 'package:flypro_expense_tracker/models/expense_model.dart';
@@ -101,7 +102,6 @@ class _NewExpensePageState extends State<NewExpensePage> {
       }
     } else {
       Provider.of<ExpenseProvider>(context, listen: false).updateExpense(
-        widget.expense!.id, // 🔥 keep same ID
         widget.expense!.copyWith(
           amount: int.parse(_amountController.text),
           description: _descriptionController.text,
@@ -131,7 +131,10 @@ class _NewExpensePageState extends State<NewExpensePage> {
       builder: (ctx) => TripListTile(
         onTap: (int index) {
           setState(() {
-            _trip = myTrips[index].destination;
+            _trip = Provider.of<TripProvider>(
+              context,
+              listen: false,
+            ).items[index].destination;
           });
           // Navigator.pop(context);
         },
