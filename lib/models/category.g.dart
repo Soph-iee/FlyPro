@@ -18,7 +18,7 @@ class CategoryAdapter extends TypeAdapter<Category> {
       case 1:
         return Category.transport;
       case 2:
-        return Category.accommodation;
+        return Category.accomodation;
       case 3:
         return Category.meals;
       case 4:
@@ -37,7 +37,7 @@ class CategoryAdapter extends TypeAdapter<Category> {
       case Category.transport:
         writer.writeByte(1);
         break;
-      case Category.accommodation:
+      case Category.accomodation:
         writer.writeByte(2);
         break;
       case Category.meals:

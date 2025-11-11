@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flypro_expense_tracker/models/expense_model.dart';
 import 'package:flypro_expense_tracker/models/trip_model.dart';
 import 'package:flypro_expense_tracker/models/trip_status.dart';
 import 'package:hive/hive.dart';
@@ -10,6 +11,7 @@ class TripProvider extends ChangeNotifier {
   TripProvider() {
     getTrips();
   }
+
   void getTrips() async {
     var box = await Hive.openBox<Trip>(_boxName);
     _myTrips = box.values.toList();
@@ -34,6 +36,13 @@ class TripProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void clearTrips() async {
+    var box = await Hive.openBox<Trip>(_boxName);
+    await box.clear();
+    _myTrips = box.values.toList();
+    notifyListeners();
+  }
+
   void updateTrip(Trip updatedTrip) async {
     var box = await Hive.openBox<Trip>(_boxName);
     await box.put(updatedTrip.key, updatedTrip);
@@ -45,17 +54,24 @@ class TripProvider extends ChangeNotifier {
     var pendingTrips = _myTrips
         .where((trip) => trip.status == TripStatus.pending)
         .toList();
-    notifyListeners();
     return pendingTrips;
   }
 
   double get savings {
-    double budgets = _myTrips.fold(0.0, (sum, item) => sum + item.budget);
-    double totalSpents = _myTrips.fold(
-      0.0,
-      (sum, item) => sum + item.totalSpent,
-    );
+    return _myTrips.fold(0.0, (sum, trip) {
+      return sum + (trip.budget - trip.totalSpent);
+    });
+  }
 
-    return budgets - totalSpents;
+  List<Expense> expensesForTrip(String trip) {
+    final expensesBox = Hive.box<Expense>('expensesBox');
+    final expenses = expensesBox.values.where((e) => e.tripId == trip);
+    final tripItem = _myTrips.firstWhere((t) => t.destination == trip);
+    tripItem.totalSpent = expenses.toList().fold(
+      0.0,
+      (sum, item) => sum + item.amount,
+    );
+    tripItem.expenseCount = expenses.length;
+    return expenses.toList();
   }
 }

@@ -7,9 +7,6 @@ import 'package:uuid/uuid.dart';
 
 part 'trip_model.g.dart';
 
-
-
-
 final fomatter = DateFormat.yMMMd();
 final digitFormatter = NumberFormat('#,###.##');
 
@@ -32,7 +29,7 @@ class Trip extends HiveObject {
   @HiveField(6)
   DateTime endDate;
   @HiveField(7)
-  int? expenseCount;
+  int expenseCount;
   @HiveField(8)
   Currency currency;
   @HiveField(9)
@@ -48,9 +45,9 @@ class Trip extends HiveObject {
     required this.endDate,
     required this.startDate,
     required this.currency,
-    this.expenseCount,
+    this.expenseCount = 0,
     required this.status,
-    required this.totalSpent,
+    this.totalSpent = 0.0,
   }) : id = uuid.v4();
 
   String get formattedStartDate {

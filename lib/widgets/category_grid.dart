@@ -1,14 +1,13 @@
 // ignore: unused_import
 import 'package:flutter/foundation.dart' hide Category;
 import 'package:flutter/material.dart';
-import 'package:flypro_expense_tracker/models/expense_model.dart';
+import 'package:flypro_expense_tracker/models/category.dart';
 
 class CategoryGrid extends StatelessWidget {
   const CategoryGrid({super.key, required this.selectCategory});
 
-// the function that will be called when a category is selected
+  // the function that will be called when a category is selected
   final void Function(Category value) selectCategory;
-
 
   @override
   Widget build(BuildContext context) {

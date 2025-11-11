@@ -1,9 +1,12 @@
+
+
 import 'package:flutter/material.dart';
+import 'package:flypro_expense_tracker/models/category.dart';
 import 'package:flypro_expense_tracker/models/expense_model.dart';
 import 'package:hive/hive.dart';
 
 class ExpenseProvider extends ChangeNotifier {
-  final String _boxName = 'expenseBox';
+  final String _boxName = 'expensesBox';
 
   List<Expense> _myExpense = [];
   ExpenseProvider() {
@@ -56,6 +59,18 @@ class ExpenseProvider extends ChangeNotifier {
               ),
         )
         .toList();
+    notifyListeners();
+  }
+
+  void clearExpenses() async {
+    var box = await Hive.openBox<Expense>(_boxName);
+    await box.clear();
+    _myExpense = box.values.toList();
+    notifyListeners();
+  }
+
+  void searchCategory(Category category) {
+    _myExpense = _myExpense.where((e) => e.category == category).toList();
     notifyListeners();
   }
 

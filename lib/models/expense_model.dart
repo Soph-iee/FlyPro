@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flypro_expense_tracker/models/category.dart';
 import 'package:flypro_expense_tracker/models/currency.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
@@ -7,25 +7,9 @@ import 'package:uuid/uuid.dart';
 
 part 'expense_model.g.dart';
 
-enum Category { travel, meals, accomodation, transport, other }
 
 // enum Currency { usd, ngn, cad, gbp, eur }
 
-const categoryIcons = {
-  Category.travel: Icons.flight_takeoff,
-  Category.meals: Icons.dining_sharp,
-  Category.accomodation: Icons.hotel,
-  Category.transport: Icons.local_taxi,
-  Category.other: Icons.category,
-};
-
-final categoryColors = {
-  Category.meals: Colors.orange,
-  Category.transport: Colors.blue,
-  Category.travel: Colors.pink,
-  Category.accomodation: Colors.green,
-  Category.other: Colors.grey,
-};
 
 final uuid = const Uuid();
 

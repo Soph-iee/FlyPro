@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flypro_expense_tracker/models/category.dart';
 import 'package:flypro_expense_tracker/models/currency.dart';
 import 'package:flypro_expense_tracker/providers/expense_provider.dart';
 import 'package:flypro_expense_tracker/providers/trip_provider.dart';
@@ -119,9 +120,7 @@ class _NewExpensePageState extends State<NewExpensePage> {
   void _showCategory() {
     showModalBottomSheet(
       context: context,
-      builder: (ctx) => CategoryGrid(
-        selectCategory: _selectCategory,
-      ),
+      builder: (ctx) => CategoryGrid(selectCategory: _selectCategory),
     );
   }
 

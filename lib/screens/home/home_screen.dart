@@ -2,7 +2,6 @@ import 'package:flypro_expense_tracker/providers/expense_provider.dart';
 import 'package:flypro_expense_tracker/providers/trip_provider.dart';
 import 'package:flypro_expense_tracker/screens/Expense/all_expenses.dart';
 import 'package:flypro_expense_tracker/screens/trips/new_trip.dart';
-import 'package:flypro_expense_tracker/utils/formatter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
@@ -20,18 +19,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  //  add new expense function
-  void _addNewExpense() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const NewExpensePage(),
-      ),
-    );
-  }
-
-  // updating expense list functi
-
   // sign out function
   Future<void> _signUserOut() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -113,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 CardContainer(
                   cardText: 'Expenses',
-                  amount: int.parse(formatNumber(expenseProvider.totalExpense)),
+                  amount: expenseProvider.totalExpense.toInt(),
                   iconData: Icons.trending_down,
                 ),
 
@@ -185,7 +172,14 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           if (_showOptions) ...[
             FloatingActionButton.extended(
-              onPressed: _addNewExpense,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const NewExpensePage(),
+                  ),
+                );
+              },
               heroTag: 'expense',
               tooltip: 'Add Expense',
               label: const Text('Add Expense'),

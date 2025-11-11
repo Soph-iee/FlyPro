@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flypro_expense_tracker/models/category.dart';
 import 'package:flypro_expense_tracker/models/expense_model.dart';
 import 'package:flypro_expense_tracker/providers/expense_provider.dart';
 import 'package:flypro_expense_tracker/screens/Expense/new_expense_page.dart';
@@ -67,13 +68,37 @@ class ExpenseItem extends StatelessWidget {
           );
           return false; // don't dismiss on edit
         }
-        return true; // allow dismiss on delete (endToStart)
-      },
-      onDismissed: (direction) {
+
         if (direction == DismissDirection.endToStart) {
-          expenseProvider.removeExpense(expense.key);
+          showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: const Text('Delete Expense'),
+              content: const Text(
+                'Are you sure you want to delete this expense?',
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    expenseProvider.removeExpense(expense.key);
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Delete'),
+                ),
+              ],
+            ),
+          );
         }
+        return null;
+        //  allow dismiss on delete (endToStart)
       },
+      onDismissed: (direction) {},
       child: ListTile(
         key: ValueKey(expense),
         contentPadding: const EdgeInsets.symmetric(

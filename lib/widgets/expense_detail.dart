@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flypro_expense_tracker/models/category.dart';
 import 'package:flypro_expense_tracker/models/expense_model.dart';
+import 'package:flypro_expense_tracker/providers/expense_provider.dart';
 import 'package:flypro_expense_tracker/screens/Expense/new_expense_page.dart';
+import 'package:flypro_expense_tracker/screens/home/home_screen.dart';
+import 'package:provider/provider.dart';
 
 class ExpenseDetail extends StatelessWidget {
   const ExpenseDetail({super.key, required this.expense});
@@ -8,9 +12,46 @@ class ExpenseDetail extends StatelessWidget {
   final Expense expense;
   @override
   Widget build(BuildContext context) {
+    final expenseProvider = Provider.of<ExpenseProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Expense Details'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                  title: const Text('Delete Expense'),
+                  content: const Text(
+                    'Are you sure you want to delete this expense?',
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        expenseProvider.removeExpense(expense.key);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (ctx) => const HomeScreen(),
+                          ),
+                        );
+                      },
+                      child: const Text('Delete'),
+                    ),
+                  ],
+                ),
+              );
+            },
+            icon: const Icon(Icons.delete),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.only(bottom: 32, left: 8, right: 8),

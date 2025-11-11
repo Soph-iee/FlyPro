@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flypro_expense_tracker/models/category.dart';
 import 'package:flypro_expense_tracker/models/expense_model.dart';
 import 'package:flypro_expense_tracker/providers/expense_provider.dart';
 import 'package:flypro_expense_tracker/widgets/expense_item.dart';
@@ -25,34 +26,38 @@ class _AllExpensesPageState extends State<AllExpensesPage> {
     _filteredExpenses = _allExpenses;
   }
 
-  String _searchQuery = '';
   Category? _selectedCategory;
 
   String _sortBy = 'Date'; // or 'Amount'
+  void _clearExpenses() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Clear All Expenses'),
+        content: const Text('Are you sure you want to clear all expenses?'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Provider.of<ExpenseProvider>(
+                context,
+                listen: false,
+              ).clearExpenses();
+              Navigator.of(context).pop();
+            },
+            child: const Text('Clear'),
+          ),
+        ],
+      ),
+    );
+  }
 
   void _applyFilters() {
-    // 🔍 Search
-    if (_searchQuery.isNotEmpty) {
-      setState(() {
-        _filteredExpenses = _allExpenses
-            .where(
-              (e) => e.description.toLowerCase().contains(
-                _searchQuery.toLowerCase(),
-              ),
-            )
-            .toList();
-      });
-    }
-
-    // Filter by category
-    if (_selectedCategory != null) {
-      setState(() {
-        _filteredExpenses = _allExpenses
-            .where((e) => e.category == _selectedCategory)
-            .toList();
-      });
-    }
-
     // Sort
     if (_sortBy == 'Date') {
       _filteredExpenses.sort(
@@ -67,6 +72,7 @@ class _AllExpensesPageState extends State<AllExpensesPage> {
 
   @override
   Widget build(BuildContext context) {
+    ExpenseProvider expenseProvider = Provider.of<ExpenseProvider>(context);
     return SafeArea(
       child: Scaffold(
         body: Padding(
@@ -83,8 +89,7 @@ class _AllExpensesPageState extends State<AllExpensesPage> {
                     border: OutlineInputBorder(),
                   ),
                   onChanged: (value) {
-                    _searchQuery = value;
-                    _applyFilters();
+                    expenseProvider.searchExpense(value);
                   },
                 ),
               ),
@@ -98,8 +103,10 @@ class _AllExpensesPageState extends State<AllExpensesPage> {
                     DropdownButton<Category>(
                       value: _selectedCategory,
                       onChanged: (value) {
-                        _selectedCategory = value!;
-                        _applyFilters();
+                        if (value == null) {
+                          return;
+                        }
+                        expenseProvider.searchCategory(value);
                       },
                       items: Category.values
                           .map(
@@ -144,6 +151,12 @@ class _AllExpensesPageState extends State<AllExpensesPage> {
                     ),
                   ),
                 ),
+              ),
+              const SizedBox(height: 12),
+
+              TextButton(
+                onPressed: _clearExpenses,
+                child: const Text('Clear All'),
               ),
             ],
           ),

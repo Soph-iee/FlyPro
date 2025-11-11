@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flypro_expense_tracker/models/expense_model.dart';
 import 'package:flypro_expense_tracker/models/trip_model.dart';
-import 'package:flypro_expense_tracker/providers/expense_provider.dart';
+import 'package:flypro_expense_tracker/providers/trip_provider.dart';
 import 'package:flypro_expense_tracker/screens/Charts/expense_chart.dart';
-import 'package:flypro_expense_tracker/utils/formatter.dart';
+import 'package:flypro_expense_tracker/screens/Expense/new_expense_page.dart';
+import 'package:flypro_expense_tracker/utils/utils.dart';
 import 'package:flypro_expense_tracker/widgets/expense_item.dart';
 import 'package:provider/provider.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -15,14 +16,51 @@ class TripDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ExpenseProvider expenseProvider = Provider.of<ExpenseProvider>(context);
-    final String targetTrip = trip.destination;
-    List<Expense> eachTripExpense = expenseProvider.activeExpenseForTrip(
-      targetTrip,
+    TripProvider tripProvider = Provider.of<TripProvider>(context);
+    List<Expense> eachTripExpense = tripProvider.expensesForTrip(
+      trip.destination,
     );
+    void deleteTrip() {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          content: Text('Are you sure you want to delete ${trip.name} trip?'),
+          title: const Text('Delete Trip'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Provider.of<TripProvider>(
+                  context,
+                  listen: false,
+                ).removeTrip(trip.key);
+                Navigator.of(context).pop();
+              },
+              child: const Text('Delete'),
+            ),
+          ],
+        ),
+      );
+    }
+
+    double percentSpent = trip.totalSpent / trip.budget;
+    if (percentSpent > 1) percentSpent = 1;
+
+    Color progressColor = getBudgetColor(percentSpent);
+    String percentText = "${(percentSpent * 100).toStringAsFixed(0)}%";
+
     return Scaffold(
       appBar: AppBar(
         title: Text(trip.name),
+
+        actions: [
+          IconButton(onPressed: deleteTrip, icon: const Icon(Icons.delete)),
+        ],
       ),
       body: Column(
         children: [
@@ -57,6 +95,9 @@ class TripDetail extends StatelessWidget {
                           fontSize: 24,
                           color: Colors.white,
                         ),
+                      ),
+                      const SizedBox(
+                        height: 12,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -94,15 +135,59 @@ class TripDetail extends StatelessWidget {
           const SizedBox(
             height: 12,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(
-                ' Trip Description: ${trip.desription}',
-                style: const TextStyle(fontSize: 18),
-              ),
-            ],
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'DESCRIPTION: ${trip.desription}',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+
+                Text(
+                  '${trip.expenseCount.toString()}  Expenses',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
           ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(6),
+                    child: LinearProgressIndicator(
+                      value: percentSpent,
+                      color: progressColor,
+                      backgroundColor: Colors.grey.shade300,
+                      minHeight: 16,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  width: 12,
+                ),
+                Text(
+                  percentText,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+
           const SizedBox(
             height: 12,
           ),
@@ -114,8 +199,31 @@ class TripDetail extends StatelessWidget {
             ),
           ),
           eachTripExpense.isNotEmpty
-              ? Expanded(child: ExpenseChart(expensesList: eachTripExpense))
-              : const SizedBox(),
+              ? Expanded(
+                  child: ExpenseChart(expensesList: eachTripExpense),
+                )
+              : Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const Text('No expense for this trip yet'),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (ctx) => const NewExpensePage(),
+                            ),
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.add,
+                          size: 24,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
         ],
       ),
     );
@@ -126,16 +234,20 @@ class TripDetail extends StatelessWidget {
     required BuildContext context,
   }) {
     // ExpenseProvider expenseProvider = Provider.of<ExpenseProvider>(context);
-    return ListView.builder(
-      itemCount: eachTripExpense.length,
-      itemBuilder: (context, index) => Padding(
-        padding: const EdgeInsets.all(4),
-        child: eachTripExpense.isNotEmpty
-            ? ExpenseItem(
-                expense: eachTripExpense[index],
-              )
-            : const Text('No expense data for this trip'),
-      ),
+    return Consumer<TripProvider>(
+      builder: (context, tripProvider, child) {
+        return ListView.builder(
+          itemCount: eachTripExpense.length,
+          itemBuilder: (context, index) => Padding(
+            padding: const EdgeInsets.all(4),
+            child: eachTripExpense.isNotEmpty
+                ? ExpenseItem(
+                    expense: eachTripExpense[index],
+                  )
+                : const Text('No expense data for this trip'),
+          ),
+        );
+      },
     );
   }
 }

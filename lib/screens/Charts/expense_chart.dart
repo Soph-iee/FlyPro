@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flypro_expense_tracker/models/category.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flypro_expense_tracker/providers/expense_provider.dart';

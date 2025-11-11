@@ -24,7 +24,7 @@ class TripAdapter extends TypeAdapter<Trip> {
       endDate: fields[6] as DateTime,
       startDate: fields[5] as DateTime,
       currency: fields[8] as Currency,
-      expenseCount: fields[7] as int?,
+      expenseCount: fields[7] as int,
       status: fields[9] as TripStatus,
       totalSpent: fields[10] as double,
     )..id = fields[0] as String;

@@ -14,9 +14,8 @@ class SplashScreen extends StatelessWidget {
           'assets/data/splashscreen.json',
         ),
       ),
-      splashIconSize: 300,
+      splashIconSize: 500,
       nextScreen: const AuthGate(),
-      splashTransition: SplashTransition.fadeTransition,
       backgroundColor: Theme.of(context).colorScheme.primary,
       duration: 5000,
     );

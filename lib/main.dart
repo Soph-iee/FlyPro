@@ -25,7 +25,6 @@ void main() async {
   await Hive.openBox<Trip>('tripsBox');
   await Hive.openBox<Expense>('expensesBox');
 
-
   runApp(
     MultiProvider(
       providers: [

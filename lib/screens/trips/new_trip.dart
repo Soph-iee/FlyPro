@@ -74,6 +74,7 @@ class _NewTripState extends State<NewTrip> {
         totalSpent: 0,
       ),
     );
+  
     Navigator.push(
       context,
       MaterialPageRoute(builder: (ctx) => const AllTrips()),
