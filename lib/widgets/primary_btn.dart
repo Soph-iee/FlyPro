@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class PrimaryBtn extends StatelessWidget {
-const PrimaryBtn({super.key, required this.onTap});
+  const PrimaryBtn({super.key, required this.onTap});
 
-// ON TAP FUNCTION
- final  void Function()? onTap;
+  // ON TAP FUNCTION
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ const PrimaryBtn({super.key, required this.onTap});
         padding: const EdgeInsets.all(25),
         margin: const EdgeInsets.symmetric(horizontal: 25),
         decoration: BoxDecoration(
-          color: Colors.black,
+          color: Theme.of(context).colorScheme.primary,
           borderRadius: BorderRadius.circular(8),
         ),
         child: const Center(

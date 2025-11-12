@@ -22,6 +22,11 @@ class TripProvider extends ChangeNotifier {
     return _myTrips;
   }
 
+  double get savings {
+    return _myTrips.fold(0.0, (sum, trip) => sum + trip.budget) -
+        _myTrips.fold(0.0, (sum, trip) => sum + trip.totalSpent);
+  }
+
   void addTrip(Trip trip) async {
     var box = await Hive.openBox<Trip>(_boxName);
     await box.add(trip);
@@ -55,12 +60,6 @@ class TripProvider extends ChangeNotifier {
         .where((trip) => trip.status == TripStatus.pending)
         .toList();
     return pendingTrips;
-  }
-
-  double get savings {
-    return _myTrips.fold(0.0, (sum, trip) {
-      return sum + (trip.budget - trip.totalSpent);
-    });
   }
 
   List<Expense> expensesForTrip(String trip) {

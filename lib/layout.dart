@@ -45,12 +45,12 @@ class _LayoutState extends State<Layout> {
             label: 'trips',
           ),
           const BottomNavigationBarItem(
-            icon: Icon(Icons.money),
-            label: 'expense',
+            icon: Icon(Icons.bar_chart),
+            label: 'Charts',
           ),
           const BottomNavigationBarItem(
             icon: Icon(Icons.notes),
-            label: 'budget',
+            label: 'Profile',
           ),
         ],
         type: BottomNavigationBarType.fixed,

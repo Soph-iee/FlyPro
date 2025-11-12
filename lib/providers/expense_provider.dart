@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:flypro_expense_tracker/models/category.dart';
 import 'package:flypro_expense_tracker/models/expense_model.dart';
@@ -39,7 +37,9 @@ class ExpenseProvider extends ChangeNotifier {
 
   void updateExpense(Expense updatedExpense) async {
     var box = await Hive.openBox<Expense>(_boxName);
+    // box.add(updatedExpense);
     await box.put(updatedExpense.key, updatedExpense);
+    updatedExpense.save();
     _myExpense = box.values.toList();
     notifyListeners();
   }

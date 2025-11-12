@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flypro_expense_tracker/layout.dart';
-import 'package:flypro_expense_tracker/screens/pages/login_page.dart';
+import 'package:flypro_expense_tracker/screens/authentication/login_page.dart';
 
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});

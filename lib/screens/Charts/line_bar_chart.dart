@@ -104,8 +104,8 @@ class ExpenseBarChart extends StatelessWidget {
         borderData: FlBorderData(show: false),
       ),
     );
+    
   }
 
-  /// Groups expenses by date and sums the amounts
 
 }

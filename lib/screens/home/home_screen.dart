@@ -211,7 +211,59 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
-      drawer: const Drawer(),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero, // Remove default padding
+          children: <Widget>[
+            // DrawerHeader or UserAccountsDrawerHeader for the top section
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              child: const Text(
+                'FLYPRO  Trip Expense Tracker',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            // ListTile widgets for menu items
+            ListTile(
+              leading: const Icon(Icons.home),
+              title: const Text('Receipts'),
+              onTap: () {
+                // Handle navigation or other actions
+                Navigator.pop(context); // Close the drawer
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('Settings'),
+              onTap: () {
+                // Handle navigation or other actions
+                Navigator.pop(context); // Close the drawer
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.info),
+              title: const Text('Profile'),
+              onTap: () {
+                // Handle navigation or other actions
+                Navigator.pop(context); // Close the drawer
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.help),
+              title: const Text(' Help & Support'),
+              onTap: () {
+                // Handle navigation or other actions
+                Navigator.pop(context); // Close the drawer
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

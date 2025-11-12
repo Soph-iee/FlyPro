@@ -103,7 +103,7 @@ class _NewExpensePageState extends State<NewExpensePage> {
       }
     } else {
       Provider.of<ExpenseProvider>(context, listen: false).updateExpense(
-        widget.expense!.copyWith(
+        widget.expense!.copyWith( 
           amount: int.parse(_amountController.text),
           description: _descriptionController.text,
           date: selectedDate,

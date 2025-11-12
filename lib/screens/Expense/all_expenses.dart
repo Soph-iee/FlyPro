@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flypro_expense_tracker/models/category.dart';
 import 'package:flypro_expense_tracker/models/expense_model.dart';
 import 'package:flypro_expense_tracker/providers/expense_provider.dart';
+import 'package:flypro_expense_tracker/screens/home/home_screen.dart';
 import 'package:flypro_expense_tracker/widgets/expense_item.dart';
 import 'package:provider/provider.dart';
 
@@ -48,7 +49,12 @@ class _AllExpensesPageState extends State<AllExpensesPage> {
                 context,
                 listen: false,
               ).clearExpenses();
-              Navigator.of(context).pop();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (ctx) => const HomeScreen(),
+                ),
+              );
             },
             child: const Text('Clear'),
           ),

@@ -51,6 +51,7 @@ dependencies:
   path_provider: ^2.1.5
   lottie: ^3.3.2
   animated_splash_screen: ^1.3.0
+  http: ^1.6.0
 
 dev_dependencies:
   flutter_test:
