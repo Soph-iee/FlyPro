@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flypro_expense_tracker/models/category.dart';
 import 'package:flypro_expense_tracker/models/expense_model.dart';
-import 'package:flypro_expense_tracker/providers/expense_provider.dart';
+import 'package:flypro_expense_tracker/providers/app_provider.dart';
 import 'package:flypro_expense_tracker/screens/Expense/new_expense_page.dart';
 import 'package:flypro_expense_tracker/screens/home/home_screen.dart';
 import 'package:provider/provider.dart';
@@ -12,7 +12,7 @@ class ExpenseDetail extends StatelessWidget {
   final Expense expense;
   @override
   Widget build(BuildContext context) {
-    final expenseProvider = Provider.of<ExpenseProvider>(context);
+    final expenseProvider = Provider.of<AppProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Expense Details'),

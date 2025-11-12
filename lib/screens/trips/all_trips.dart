@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flypro_expense_tracker/models/trip_model.dart';
-import 'package:flypro_expense_tracker/providers/trip_provider.dart';
+import 'package:flypro_expense_tracker/providers/app_provider.dart';
 import 'package:flypro_expense_tracker/screens/trips/new_trip.dart';
 import 'package:flypro_expense_tracker/widgets/trip_detail.dart';
 import 'package:flypro_expense_tracker/widgets/trip_item.dart';
@@ -36,7 +36,7 @@ class _AllTripsState extends State<AllTrips> {
           ),
           TextButton(
             onPressed: () {
-              Provider.of<TripProvider>(context, listen: false).clearTrips();
+              Provider.of<AppProvider>(context, listen: false).clearTrips();
               Navigator.pop(context);
             },
             child: const Text('Delete'),
@@ -48,11 +48,11 @@ class _AllTripsState extends State<AllTrips> {
 
   @override
   Widget build(BuildContext context) {
-    TripProvider tripProvider = Provider.of<TripProvider>(
+    AppProvider tripProvider = Provider.of<AppProvider>(
       listen: true,
       context,
     );
-    List<Trip> myTrips = tripProvider.items;
+    List<Trip> myTrips = tripProvider.tripItems;
 
     return Scaffold(
       appBar: AppBar(
@@ -77,9 +77,9 @@ class _AllTripsState extends State<AllTrips> {
           ),
         ],
       ),
-      body: Consumer<TripProvider>(
+      body: Consumer<AppProvider>(
         builder: (context, value, child) {
-          if (tripProvider.items.isEmpty) {
+          if (tripProvider.tripItems.isEmpty) {
             return const Center(child: Text('No Trips saved.'));
           } else {
             return GridView.builder(

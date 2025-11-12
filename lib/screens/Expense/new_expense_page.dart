@@ -2,8 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flypro_expense_tracker/models/category.dart';
 import 'package:flypro_expense_tracker/models/currency.dart';
-import 'package:flypro_expense_tracker/providers/expense_provider.dart';
-import 'package:flypro_expense_tracker/providers/trip_provider.dart';
+import 'package:flypro_expense_tracker/providers/app_provider.dart';
 import 'package:flypro_expense_tracker/widgets/category_grid.dart';
 import 'package:flypro_expense_tracker/widgets/receipt_picker.dart';
 import 'package:flypro_expense_tracker/models/expense_model.dart';
@@ -89,7 +88,7 @@ class _NewExpensePageState extends State<NewExpensePage> {
           ),
         );
       } else {
-        Provider.of<ExpenseProvider>(context, listen: false).addExpense(
+        Provider.of<AppProvider>(context, listen: false).addExpense(
           Expense(
             amount: amountEntered,
             description: validTitle,
@@ -102,14 +101,14 @@ class _NewExpensePageState extends State<NewExpensePage> {
         );
       }
     } else {
-      Provider.of<ExpenseProvider>(context, listen: false).updateExpense(
-        widget.expense!.copyWith( 
+      Provider.of<AppProvider>(context, listen: false).updateExpense(
+        Expense(
           amount: int.parse(_amountController.text),
           description: _descriptionController.text,
-          date: selectedDate,
-          category: selectedCategory,
+          date: selectedDate!,
+          category: selectedCategory!,
           currency: _prefferedCurrency,
-          tripId: _trip,
+          tripId: _trip!,
           notes: _notesController.text,
         ),
       );
@@ -130,10 +129,10 @@ class _NewExpensePageState extends State<NewExpensePage> {
       builder: (ctx) => TripListTile(
         onTap: (int index) {
           setState(() {
-            _trip = Provider.of<TripProvider>(
+            _trip = Provider.of<AppProvider>(
               context,
               listen: false,
-            ).items[index].destination;
+            ).tripItems[index].destination;
           });
           // Navigator.pop(context);
         },

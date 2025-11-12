@@ -4,9 +4,10 @@ import 'package:flypro_expense_tracker/models/currency.dart';
 import 'package:flypro_expense_tracker/models/expense_model.dart';
 import 'package:flypro_expense_tracker/models/trip_model.dart';
 import 'package:flypro_expense_tracker/models/trip_status.dart';
-import 'package:flypro_expense_tracker/providers/trip_provider.dart';
-import 'package:flypro_expense_tracker/providers/expense_provider.dart';
+import 'package:flypro_expense_tracker/providers/app_provider.dart';
+import 'package:flypro_expense_tracker/screens/home/home_screen.dart';
 import 'package:flypro_expense_tracker/screens/splash_screen.dart';
+import 'package:flypro_expense_tracker/screens/trips/all_trips.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
@@ -26,11 +27,8 @@ void main() async {
   await Hive.openBox<Expense>('expensesBox');
 
   runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => TripProvider()),
-        ChangeNotifierProvider(create: (_) => ExpenseProvider()),
-      ],
+    ChangeNotifierProvider(
+      create: (_) => AppProvider(),
       child: const MyApp(),
     ),
   );
@@ -42,6 +40,11 @@ class MyApp extends StatelessWidget {
   Widget build(context) {
     return MaterialApp(
       home: const SplashScreen(),
+      routes: {
+        '/home': (context) => const HomeScreen(),
+        '/trips': (context) => const AllTrips(),
+      },
+
       title: 'expense tracker',
       theme: ThemeData(
         textTheme: GoogleFonts.latoTextTheme(),

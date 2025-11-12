@@ -1,9 +1,9 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flypro_expense_tracker/models/category.dart';
+import 'package:flypro_expense_tracker/providers/app_provider.dart';
 import 'package:provider/provider.dart';
 
-import 'package:flypro_expense_tracker/providers/expense_provider.dart';
 import 'package:flypro_expense_tracker/models/expense_model.dart';
 
 class ExpenseChart extends StatelessWidget {
@@ -13,8 +13,8 @@ class ExpenseChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final expenseProvider = Provider.of<ExpenseProvider>(context);
-    final expenses = expensesList ?? expenseProvider.items;
+    final expenseProvider = Provider.of<AppProvider>(context);
+    final expenses = expensesList ?? expenseProvider.expenseItems;
 
     // ✅ Group total amount by category
     final Map<Category, double> categoryTotals = {};

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flypro_expense_tracker/models/category.dart';
 import 'package:flypro_expense_tracker/models/expense_model.dart';
-import 'package:flypro_expense_tracker/providers/expense_provider.dart';
+import 'package:flypro_expense_tracker/providers/app_provider.dart';
 import 'package:flypro_expense_tracker/screens/Expense/new_expense_page.dart';
 import 'package:flypro_expense_tracker/widgets/expense_detail.dart';
 import 'package:provider/provider.dart';
@@ -27,7 +27,7 @@ class ExpenseItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ExpenseProvider expenseProvider = Provider.of<ExpenseProvider>(context);
+    AppProvider expenseProvider = Provider.of<AppProvider>(context);
     return Dismissible(
       key: ValueKey(expense.id),
       direction: DismissDirection.horizontal,

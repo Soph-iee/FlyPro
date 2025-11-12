@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flypro_expense_tracker/models/trip_model.dart';
-import 'package:flypro_expense_tracker/providers/trip_provider.dart';
+import 'package:flypro_expense_tracker/providers/app_provider.dart';
 import 'package:provider/provider.dart';
 
 class TripListTile extends StatefulWidget {
@@ -15,8 +15,8 @@ class TripListTile extends StatefulWidget {
 class _TripListTileState extends State<TripListTile> {
   @override
   Widget build(BuildContext context) {
-    TripProvider tripProvider = Provider.of<TripProvider>(context);
-    List<Trip> myTrips = tripProvider.items;
+    AppProvider tripProvider = Provider.of<AppProvider>(context);
+    List<Trip> myTrips = tripProvider.tripItems;
 
     return ListView.builder(
       padding: const EdgeInsets.all(16),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flypro_expense_tracker/models/expense_model.dart';
 import 'package:flypro_expense_tracker/models/trip_model.dart';
-import 'package:flypro_expense_tracker/providers/trip_provider.dart';
+import 'package:flypro_expense_tracker/providers/app_provider.dart';
 import 'package:flypro_expense_tracker/screens/Charts/expense_chart.dart';
 import 'package:flypro_expense_tracker/screens/Expense/new_expense_page.dart';
 import 'package:flypro_expense_tracker/utils/utils.dart';
@@ -16,7 +16,7 @@ class TripDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TripProvider tripProvider = Provider.of<TripProvider>(context);
+    AppProvider tripProvider = Provider.of<AppProvider>(context);
     List<Expense> eachTripExpense = tripProvider.expensesForTrip(
       trip.destination,
     );
@@ -35,11 +35,14 @@ class TripDetail extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                Provider.of<TripProvider>(
+                Provider.of<AppProvider>(
                   context,
                   listen: false,
                 ).removeTrip(trip.key);
-                Navigator.of(context).pop();
+                Navigator.pushNamed(
+                  context,
+                  '/trips'
+                );
               },
               child: const Text('Delete'),
             ),
@@ -187,7 +190,6 @@ class TripDetail extends StatelessWidget {
             ),
           ),
 
-
           const SizedBox(
             height: 12,
           ),
@@ -234,7 +236,7 @@ class TripDetail extends StatelessWidget {
     required BuildContext context,
   }) {
     // ExpenseProvider expenseProvider = Provider.of<ExpenseProvider>(context);
-    return Consumer<TripProvider>(
+    return Consumer<AppProvider>(
       builder: (context, tripProvider, child) {
         return ListView.builder(
           itemCount: eachTripExpense.length,

@@ -4,13 +4,7 @@ import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
-
 part 'expense_model.g.dart';
-
-
-// enum Currency { usd, ngn, cad, gbp, eur }
-
-
 final uuid = const Uuid();
 
 final formatter = DateFormat.yMMMd();
@@ -46,25 +40,7 @@ class Expense extends HiveObject {
     this.notes,
   }) : id = uuid.v4();
 
-  Expense copyWith({
-    int? amount,
-    String? description,
-    DateTime? date,
-    Category? category,
-    Currency? currency,
-    String? tripId,
-    String? notes,
-  }) {
-    return Expense(
-      amount: amount ?? this.amount,
-      description: description ?? this.description,
-      date: date ?? this.date,
-      category: category ?? this.category,
-      currency: currency ?? this.currency,
-      tripId: tripId ?? this.tripId,
-      notes: notes ?? this.notes,
-    );
-  }
+
 
   String get formattedDate {
     return formatter.format(date);

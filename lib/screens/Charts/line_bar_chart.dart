@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flypro_expense_tracker/models/expense_model.dart';
-import 'package:flypro_expense_tracker/providers/expense_provider.dart';
+import 'package:flypro_expense_tracker/providers/app_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
@@ -10,7 +10,7 @@ class ExpenseChartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final expenses = context.watch<ExpenseProvider>().items;
+    final expenses = context.watch<AppProvider>().expenseItems;
 
     return Scaffold(
       appBar: AppBar(title: const Text("Expense Bar Chart")),
