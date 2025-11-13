@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flypro_expense_tracker/screens/Settings/user_profile.dart';
 import 'package:flypro_expense_tracker/screens/charts/line_bar_chart.dart';
 import 'package:flypro_expense_tracker/screens/home/home_screen.dart';
+import 'package:flypro_expense_tracker/screens/receipt_screen.dart';
 import 'package:flypro_expense_tracker/screens/trips/all_trips.dart';
 
 class Layout extends StatefulWidget {
@@ -18,7 +18,7 @@ class _LayoutState extends State<Layout> {
     const HomeScreen(userName: ''),
     const AllTrips(),
     const ExpenseChartScreen(),
-    const UserProfile(),
+    const ReceiptScreen(),
   ];
 
   int _currentScreen = 0;
@@ -50,7 +50,7 @@ class _LayoutState extends State<Layout> {
           ),
           const BottomNavigationBarItem(
             icon: Icon(Icons.notes),
-            label: 'Profile',
+            label: 'Receipts',
           ),
         ],
         type: BottomNavigationBarType.fixed,

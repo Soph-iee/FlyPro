@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flypro_expense_tracker/models/category.dart';
 import 'package:flypro_expense_tracker/models/currency.dart';
@@ -10,8 +11,9 @@ import 'package:flypro_expense_tracker/widgets/trip_list_tile.dart';
 import 'package:provider/provider.dart';
 
 class NewExpensePage extends StatefulWidget {
-  const NewExpensePage({this.expense, super.key});
+  const NewExpensePage({this.expense, this.expenseKey, super.key});
   final Expense? expense;
+  final int? expenseKey;
   @override
   State<NewExpensePage> createState() => _NewExpensePageState();
 }
@@ -47,6 +49,7 @@ class _NewExpensePageState extends State<NewExpensePage> {
 
   // date picker function
   File? _receiptImage;
+  List<int>? _imageBytes;
   Future<void> _selectDate() async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -66,6 +69,7 @@ class _NewExpensePageState extends State<NewExpensePage> {
       final validAmount = amountEntered == null || amountEntered <= 0;
       final validTitle = _descriptionController.text.trim();
       final notes = _notesController.text.trim();
+      Uint8List hashedImage = Uint8List.fromList(_imageBytes!);
       if (validAmount ||
           validTitle.isEmpty ||
           selectedDate == null ||
@@ -97,6 +101,7 @@ class _NewExpensePageState extends State<NewExpensePage> {
             currency: _prefferedCurrency,
             tripId: _trip!,
             notes: notes,
+            image: hashedImage,
           ),
         );
       }
@@ -111,6 +116,7 @@ class _NewExpensePageState extends State<NewExpensePage> {
           tripId: _trip!,
           notes: _notesController.text,
         ),
+        widget.expenseKey!,
       );
     }
     Navigator.pop(context);
@@ -149,10 +155,13 @@ class _NewExpensePageState extends State<NewExpensePage> {
     );
   }
 
-  void _selectRecieptImage(File image) {
+  void _selectRecieptImage(File image) async {
     setState(() {
       _receiptImage = image;
     });
+
+    _imageBytes = await image.readAsBytes();
+    if (!mounted) return;
     Navigator.pop(context);
   }
 

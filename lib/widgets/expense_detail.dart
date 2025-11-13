@@ -3,7 +3,6 @@ import 'package:flypro_expense_tracker/models/category.dart';
 import 'package:flypro_expense_tracker/models/expense_model.dart';
 import 'package:flypro_expense_tracker/providers/app_provider.dart';
 import 'package:flypro_expense_tracker/screens/Expense/new_expense_page.dart';
-import 'package:flypro_expense_tracker/screens/home/home_screen.dart';
 import 'package:provider/provider.dart';
 
 class ExpenseDetail extends StatelessWidget {
@@ -36,12 +35,7 @@ class ExpenseDetail extends StatelessWidget {
                     TextButton(
                       onPressed: () {
                         expenseProvider.removeExpense(expense.key);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (ctx) => const HomeScreen(),
-                          ),
-                        );
+                        Navigator.pop(context);
                       },
                       child: const Text('Delete'),
                     ),
@@ -58,67 +52,79 @@ class ExpenseDetail extends StatelessWidget {
         child: Column(
           children: [
             Expanded(
-              child: Column(
-                children: [
-                  Container(
-                    width: double.infinity,
-                    height: MediaQuery.of(context).size.width / 3,
-                    color: Theme.of(context).colorScheme.primary,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      height: MediaQuery.of(context).size.width / 3,
+                      color: Theme.of(context).colorScheme.primary,
 
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          textAlign: TextAlign.center,
-                          ' ${expense.currency.name.toUpperCase()} ${expense.formattedAmount}',
-                          style: const TextStyle(
-                            fontSize: 40,
-                            color: Colors.white,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            textAlign: TextAlign.center,
+                            ' ${expense.currency.name.toUpperCase()} ${expense.formattedAmount}',
+                            style: const TextStyle(
+                              fontSize: 40,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
-                        const Text(
-                          'Expense Amount',
-                          style: TextStyle(color: Colors.white, fontSize: 21),
-                        ),
-                      ],
+                          const Text(
+                            'Expense Amount',
+                            style: TextStyle(color: Colors.white, fontSize: 21),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  detailsRow(
-                    icon: categoryIcons[expense.category]!,
-                    subtitle: expense.category.name,
-                    title: 'Category',
-                    context: context,
-                  ),
-                  detailsRow(
-                    icon: Icons.travel_explore_rounded,
-                    subtitle: expense.tripId,
-                    title: 'Trip',
-                    context: context,
-                  ),
-                  detailsRow(
-                    icon: Icons.calendar_month_rounded,
-                    subtitle: expense.formattedDate,
-                    title: 'Date',
-                    context: context,
-                  ),
-                  detailsRow(
-                    icon: Icons.note_alt_rounded,
-                    subtitle: expense.description,
-                    title: 'Details',
-                    context: context,
-                  ),
-                  detailsRow(
-                    icon: Icons.notes_rounded,
-                    subtitle: expense.notes == null
-                        ? 'No notes added'
-                        : expense.notes!,
-                    title: 'Notes',
-                    context: context,
-                  ),
-                ],
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    detailsRow(
+                      icon: categoryIcons[expense.category]!,
+                      subtitle: expense.category.name,
+                      title: 'Category',
+                      context: context,
+                    ),
+                    detailsRow(
+                      icon: Icons.travel_explore_rounded,
+                      subtitle: expense.tripId,
+                      title: 'Trip',
+                      context: context,
+                    ),
+                    detailsRow(
+                      icon: Icons.calendar_month_rounded,
+                      subtitle: expense.formattedDate,
+                      title: 'Date',
+                      context: context,
+                    ),
+                    detailsRow(
+                      icon: Icons.note_alt_rounded,
+                      subtitle: expense.description,
+                      title: 'Details',
+                      context: context,
+                    ),
+                    detailsRow(
+                      icon: Icons.notes_rounded,
+                      subtitle: expense.notes == null
+                          ? 'No notes added'
+                          : expense.notes!,
+                      title: 'Notes',
+                      context: context,
+                    ),
+                    expense.image != null
+                        ? SizedBox(
+                            width: MediaQuery.of(context).size.width / 2,
+                            child: InteractiveViewer(
+                              maxScale: 2.0,
+                              minScale: 0.1,
+                              child: Image.memory(expense.image!),
+                            ),
+                          )
+                        : const SizedBox(),
+                  ],
+                ),
               ),
             ),
             Row(
@@ -136,6 +142,7 @@ class ExpenseDetail extends StatelessWidget {
                       MaterialPageRoute(
                         builder: (ctx) => NewExpensePage(
                           expense: expense,
+                          expenseKey: expense.key,
                         ),
                       ),
                     );

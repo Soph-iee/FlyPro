@@ -154,6 +154,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.all(4),
                   child: ExpenseItem(
                     expense: appProvider.expenseItems[index],
+                  
                   ),
                 ),
               ),

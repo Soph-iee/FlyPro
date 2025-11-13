@@ -36,6 +36,16 @@ class AppProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  List<Expense> getImages() {
+    var allImages = _myExpense
+        .where((expense) => expense.image != null)
+        .toList();
+    notifyListeners();
+    return allImages;
+  }
+
+  // retreiving images
+
   double get savings {
     return _myTrips.fold(0.0, (sum, trip) => sum + trip.budget) -
         _myTrips.fold(0.0, (sum, trip) => sum + trip.totalSpent);
@@ -58,13 +68,6 @@ class AppProvider extends ChangeNotifier {
   void clearTrips() async {
     var box = await Hive.openBox<Trip>(_tripBox);
     await box.clear();
-    _myTrips = box.values.toList();
-    notifyListeners();
-  }
-
-  void updateTrip(Trip updatedTrip) async {
-    var box = await Hive.openBox<Trip>(_tripBox);
-    await box.put(updatedTrip.key, updatedTrip);
     _myTrips = box.values.toList();
     notifyListeners();
   }
@@ -97,16 +100,17 @@ class AppProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeExpense(int key) async {
+  void removeExpense(dynamic key) async {
     var box = await Hive.openBox<Expense>(_expenseBox);
     await box.delete(key);
     _myExpense = box.values.toList();
     notifyListeners();
   }
 
-  void updateExpense(Expense updatedExpense) async {
+  void updateExpense(Expense updatedExpense, int key) async {
     var box = await Hive.openBox<Expense>(_expenseBox);
-    await box.put(updatedExpense.id, updatedExpense);
+    await box.put(key, updatedExpense);
+    updatedExpense.save();
     _myExpense = box.values.toList();
     notifyListeners();
   }
