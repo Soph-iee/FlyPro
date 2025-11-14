@@ -74,29 +74,32 @@ Advanced Features
 ## Challenges & Solutions
 
 1. The Hive vs. UUID Conflict
-   ● The Problem: I used a UUID string to identify expenses, but Hive uses int keys. When I tried to edit an item, Hive treated it as a new entry because it didn't recognize the UUID, causing duplicates.
+   ● The Problem: I used a UUID string to identify expenses, but Hive uses int keys. When I tried to edit an item, Hive treated it as a new entry because it didn't recognize the UUID, causing duplicates. Other times, the edit functionality was not workign at all.
    ● The Solution: Refactored the Edit logic to pass the element.key (Hive's internal key) to the form, allowing box.put(key, data) to update the correct index.
 2. State Management Migration
    ● The Challenge: Moving logic from main.dart into a TransactionProvider broke the initial setState logic.
-   ● The Fix: Centralized all list manipulation (add, remove) inside the Provider class and used Consumer widgets in the UI.
+   ● The Fix: Centralized all list manipulation (add, remove) inside the Provider class and used Consumer and Provider.of(context) widgets in the UI.
+3. Hive integration
+   Using Hive broke some functionalities like search and filter methods and I am still reading on how to make them work.
 
 ## Known Issues & Future Improvements
 
 1. State Reloading (CRUD):
-   ○ Issue: The Trip Details screen sometimes displays stale data after editing an expense within that trip.
+   ○ Issue: The Trip Details screen and expense details  sometimes displays stale data after editing an expense or adding a new expense  within that trip.
    ○ Planned Fix: Implementing ValueListenableBuilder to listen to the specific Trip object in Hive.
 2. Savings Calculation:
    ○ Issue: The "Remaining Budget" for a trip requires a manual refresh to update after adding an expense.
    ○ Planned Fix: Move calculation logic into a Computed getter within the Provider.
 3. Backend Integration:
    ○ Future Goal: Replace the Mock API/Hive setup with a real cloud backend (Firebase) for multi-device synchronization.
+4.  Dirty dependencies and Build and Setstate errors are still popping up in my debug console and I am figuring out how to fix them.
 
 ## Learning Resources
 
 ● Course: Flutter & Dart - Flutter & Dart - The Complete Guide [2025 Edition]- strictly followed for Weeks 1-2.
-● Documentation: Referenced Flutter.dev and Hive Pub.dev for implementation details.
+● Documentation: Referenced Flutter.dev, flutter cookbook and Pub.dev for implementation details.
 ● Community: Relied on StackOverflow and Medium for debugging specific logic and undestand interaction better.
-● AI Tools: Used Gemini and ChatGPT to understand complex error messages and generate JSON models.
+● AI Tools: Used Gemini and ChatGPT to understand complex logic and error messages and generate data for  mock implementation.
 
 ## Testing Approach
 
