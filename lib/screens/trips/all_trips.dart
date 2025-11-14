@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flypro_expense_tracker/models/trip_model.dart';
 import 'package:flypro_expense_tracker/providers/app_provider.dart';
 import 'package:flypro_expense_tracker/screens/trips/new_trip.dart';
-import 'package:flypro_expense_tracker/widgets/trip_detail.dart';
+import 'package:flypro_expense_tracker/screens/trips/trip_detail.dart';
 import 'package:flypro_expense_tracker/widgets/trip_item.dart';
 import 'package:provider/provider.dart';
 
