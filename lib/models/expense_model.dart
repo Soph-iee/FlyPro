@@ -1,21 +1,17 @@
+import 'dart:typed_data';
+
 import 'package:flypro_expense_tracker/models/category.dart';
 import 'package:flypro_expense_tracker/models/currency.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
-
 part 'expense_model.g.dart';
-
-
-// enum Currency { usd, ngn, cad, gbp, eur }
-
 
 final uuid = const Uuid();
 
 final formatter = DateFormat.yMMMd();
 final digitFormatter = NumberFormat('#,###.##');
-
 
 @HiveType(typeId: 0)
 class Expense extends HiveObject {
@@ -35,6 +31,8 @@ class Expense extends HiveObject {
   final DateTime date;
   @HiveField(7)
   String? notes;
+  @HiveField(8)
+  Uint8List? image;
 
   Expense({
     required this.amount,
@@ -44,27 +42,8 @@ class Expense extends HiveObject {
     required this.description,
     required this.date,
     this.notes,
+    this.image,
   }) : id = uuid.v4();
-
-  Expense copyWith({
-    int? amount,
-    String? description,
-    DateTime? date,
-    Category? category,
-    Currency? currency,
-    String? tripId,
-    String? notes,
-  }) {
-    return Expense(
-      amount: amount ?? this.amount,
-      description: description ?? this.description,
-      date: date ?? this.date,
-      category: category ?? this.category,
-      currency: currency ?? this.currency,
-      tripId: tripId ?? this.tripId,
-      notes: notes ?? this.notes,
-    );
-  }
 
   String get formattedDate {
     return formatter.format(date);

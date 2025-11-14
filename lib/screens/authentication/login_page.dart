@@ -1,11 +1,8 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:flypro_expense_tracker/layout.dart';
 import 'package:flypro_expense_tracker/models/users.dart';
 import 'package:flypro_expense_tracker/widgets/text_field.dart';
 import 'package:flypro_expense_tracker/widgets/primary_btn.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flypro_expense_tracker/screens/authentication/register_page.dart';
 import 'package:flypro_expense_tracker/screens/authentication/forgot_password.dart';
 

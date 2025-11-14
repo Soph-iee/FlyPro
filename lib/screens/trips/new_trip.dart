@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flypro_expense_tracker/models/currency.dart';
 import 'package:flypro_expense_tracker/models/trip_model.dart';
 import 'package:flypro_expense_tracker/models/trip_status.dart';
-import 'package:flypro_expense_tracker/providers/trip_provider.dart';
-import 'package:flypro_expense_tracker/screens/trips/all_trips.dart';
+import 'package:flypro_expense_tracker/providers/app_provider.dart';
 import 'package:flypro_expense_tracker/widgets/textform_field.dart';
 import 'package:provider/provider.dart';
 
@@ -56,7 +55,7 @@ class _NewTripState extends State<NewTrip> {
     }
 
     _formKey.currentState!.save();
-    TripProvider tripProvider = Provider.of<TripProvider>(
+    AppProvider tripProvider = Provider.of<AppProvider>(
       context,
       listen: false,
     );
@@ -74,11 +73,9 @@ class _NewTripState extends State<NewTrip> {
         totalSpent: 0,
       ),
     );
-  
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (ctx) => const AllTrips()),
-    );
+
+    Navigator.pop(context);
+
     _formKey.currentState!.reset();
   }
 

@@ -1,5 +1,4 @@
-import 'package:flypro_expense_tracker/providers/expense_provider.dart';
-import 'package:flypro_expense_tracker/providers/trip_provider.dart';
+import 'package:flypro_expense_tracker/providers/app_provider.dart';
 import 'package:flypro_expense_tracker/screens/Expense/all_expenses.dart';
 import 'package:flypro_expense_tracker/screens/trips/new_trip.dart';
 import 'package:provider/provider.dart';
@@ -34,8 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ExpenseProvider expenseProvider = Provider.of<ExpenseProvider>(context);
-    TripProvider tripProvider = Provider.of<TripProvider>(context);
+    AppProvider appProvider = Provider.of<AppProvider>(context);
 
     return Scaffold(
       backgroundColor: const Color(0xfff9fafb),
@@ -100,13 +98,13 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 CardContainer(
                   cardText: 'Expenses',
-                  amount: expenseProvider.totalExpense.toInt(),
+                  amount: appProvider.totalExpense.toInt(),
                   iconData: Icons.trending_down,
                 ),
 
                 CardContainer(
                   cardText: 'Trip',
-                  amount: tripProvider.items.length,
+                  amount: appProvider.tripItems.length,
                   iconData: Icons.flight_takeoff,
                 ),
               ],
@@ -117,13 +115,13 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 CardContainer(
                   cardText: 'Pending',
-                  amount: tripProvider.pendingTrips().length,
+                  amount: appProvider.pendingTrips().length,
                   iconData: Icons.travel_explore,
                 ),
 
                 CardContainer(
                   cardText: 'Savings',
-                  amount: tripProvider.savings.toInt(),
+                  amount: appProvider.savings.toInt(),
                   iconData: Icons.money,
                 ),
               ],
@@ -151,11 +149,12 @@ class _HomeScreenState extends State<HomeScreen> {
             Expanded(
               flex: 2,
               child: ListView.builder(
-                itemCount: expenseProvider.items.length,
+                itemCount: appProvider.expenseItems.length,
                 itemBuilder: (context, index) => Padding(
                   padding: const EdgeInsets.all(4),
                   child: ExpenseItem(
-                    expense: expenseProvider.items[index],
+                    expense: appProvider.expenseItems[index],
+                  
                   ),
                 ),
               ),

@@ -1,9 +1,9 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flypro_expense_tracker/models/category.dart';
 import 'package:flypro_expense_tracker/models/currency.dart';
-import 'package:flypro_expense_tracker/providers/expense_provider.dart';
-import 'package:flypro_expense_tracker/providers/trip_provider.dart';
+import 'package:flypro_expense_tracker/providers/app_provider.dart';
 import 'package:flypro_expense_tracker/widgets/category_grid.dart';
 import 'package:flypro_expense_tracker/widgets/receipt_picker.dart';
 import 'package:flypro_expense_tracker/models/expense_model.dart';
@@ -11,8 +11,9 @@ import 'package:flypro_expense_tracker/widgets/trip_list_tile.dart';
 import 'package:provider/provider.dart';
 
 class NewExpensePage extends StatefulWidget {
-  const NewExpensePage({this.expense, super.key});
+  const NewExpensePage({this.expense, this.expenseKey, super.key});
   final Expense? expense;
+  final int? expenseKey;
   @override
   State<NewExpensePage> createState() => _NewExpensePageState();
 }
@@ -44,10 +45,12 @@ class _NewExpensePageState extends State<NewExpensePage> {
     _prefferedCurrency = exp?.currency ?? Currency.ngn;
     _trip = exp?.tripId;
     selectedDate = exp?.date;
+    _imageBytes = exp?.image;
   }
 
   // date picker function
   File? _receiptImage;
+  List<int>? _imageBytes;
   Future<void> _selectDate() async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -67,6 +70,7 @@ class _NewExpensePageState extends State<NewExpensePage> {
       final validAmount = amountEntered == null || amountEntered <= 0;
       final validTitle = _descriptionController.text.trim();
       final notes = _notesController.text.trim();
+      Uint8List hashedImage = Uint8List.fromList(_imageBytes!);
       if (validAmount ||
           validTitle.isEmpty ||
           selectedDate == null ||
@@ -89,7 +93,7 @@ class _NewExpensePageState extends State<NewExpensePage> {
           ),
         );
       } else {
-        Provider.of<ExpenseProvider>(context, listen: false).addExpense(
+        Provider.of<AppProvider>(context, listen: false).addExpense(
           Expense(
             amount: amountEntered,
             description: validTitle,
@@ -98,20 +102,23 @@ class _NewExpensePageState extends State<NewExpensePage> {
             currency: _prefferedCurrency,
             tripId: _trip!,
             notes: notes,
+            image: hashedImage,
           ),
         );
       }
     } else {
-      Provider.of<ExpenseProvider>(context, listen: false).updateExpense(
-        widget.expense!.copyWith( 
+      Provider.of<AppProvider>(context, listen: false).updateExpense(
+        Expense(
           amount: int.parse(_amountController.text),
           description: _descriptionController.text,
-          date: selectedDate,
-          category: selectedCategory,
+          date: selectedDate!,
+          category: selectedCategory!,
           currency: _prefferedCurrency,
-          tripId: _trip,
+          tripId: _trip!,
           notes: _notesController.text,
+          image: Uint8List.fromList(_imageBytes!),
         ),
+        widget.expenseKey!,
       );
     }
     Navigator.pop(context);
@@ -130,10 +137,10 @@ class _NewExpensePageState extends State<NewExpensePage> {
       builder: (ctx) => TripListTile(
         onTap: (int index) {
           setState(() {
-            _trip = Provider.of<TripProvider>(
+            _trip = Provider.of<AppProvider>(
               context,
               listen: false,
-            ).items[index].destination;
+            ).tripItems[index].destination;
           });
           // Navigator.pop(context);
         },
@@ -150,10 +157,13 @@ class _NewExpensePageState extends State<NewExpensePage> {
     );
   }
 
-  void _selectRecieptImage(File image) {
+  void _selectRecieptImage(File image) async {
     setState(() {
       _receiptImage = image;
     });
+
+    _imageBytes = await image.readAsBytes();
+    if (!mounted) return;
     Navigator.pop(context);
   }
 
@@ -426,9 +436,9 @@ class _NewExpensePageState extends State<NewExpensePage> {
                 // height: 300.0,
                 margin: const EdgeInsets.only(bottom: 32),
                 color: Colors.grey[200],
-                child: _receiptImage != null
-                    ? Image.file(
-                        _receiptImage!,
+                child: _imageBytes != null
+                    ? Image.memory(
+                        Uint8List.fromList(_imageBytes!),
                         height: 250,
                         width: 250,
                       )

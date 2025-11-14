@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flypro_expense_tracker/models/expense_model.dart';
 import 'package:flypro_expense_tracker/models/trip_model.dart';
-import 'package:flypro_expense_tracker/providers/trip_provider.dart';
+import 'package:flypro_expense_tracker/providers/app_provider.dart';
 import 'package:flypro_expense_tracker/screens/Charts/expense_chart.dart';
 import 'package:flypro_expense_tracker/screens/Expense/new_expense_page.dart';
 import 'package:flypro_expense_tracker/utils/utils.dart';
@@ -16,10 +16,6 @@ class TripDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TripProvider tripProvider = Provider.of<TripProvider>(context);
-    List<Expense> eachTripExpense = tripProvider.expensesForTrip(
-      trip.destination,
-    );
     void deleteTrip() {
       showDialog(
         context: context,
@@ -35,11 +31,11 @@ class TripDetail extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                Provider.of<TripProvider>(
+                Provider.of<AppProvider>(
                   context,
-                  listen: false,
+                  listen: true,
                 ).removeTrip(trip.key);
-                Navigator.of(context).pop();
+                Navigator.pushNamed(context, '/trips');
               },
               child: const Text('Delete'),
             ),
@@ -54,6 +50,10 @@ class TripDetail extends StatelessWidget {
     Color progressColor = getBudgetColor(percentSpent);
     String percentText = "${(percentSpent * 100).toStringAsFixed(0)}%";
 
+    AppProvider tripProvider = Provider.of<AppProvider>(context, listen: false);
+    List<Expense> eachTripExpense = tripProvider.expensesForTrip(
+      trip.destination,
+    );
     return Scaffold(
       appBar: AppBar(
         title: Text(trip.name),
@@ -187,15 +187,21 @@ class TripDetail extends StatelessWidget {
             ),
           ),
 
-
           const SizedBox(
             height: 12,
           ),
 
           Expanded(
-            child: expensesList(
-              eachTripExpense: eachTripExpense,
-              context: context,
+            child: ListView.builder(
+              itemCount: eachTripExpense.length,
+              itemBuilder: (context, index) => Padding(
+                padding: const EdgeInsets.all(4),
+                child: eachTripExpense.isNotEmpty
+                    ? ExpenseItem(
+                        expense: eachTripExpense[index],
+                      )
+                    : const Text('No expense data for this trip'),
+              ),
             ),
           ),
           eachTripExpense.isNotEmpty
@@ -226,28 +232,6 @@ class TripDetail extends StatelessWidget {
                 ),
         ],
       ),
-    );
-  }
-
-  Widget expensesList({
-    required List<Expense> eachTripExpense,
-    required BuildContext context,
-  }) {
-    // ExpenseProvider expenseProvider = Provider.of<ExpenseProvider>(context);
-    return Consumer<TripProvider>(
-      builder: (context, tripProvider, child) {
-        return ListView.builder(
-          itemCount: eachTripExpense.length,
-          itemBuilder: (context, index) => Padding(
-            padding: const EdgeInsets.all(4),
-            child: eachTripExpense.isNotEmpty
-                ? ExpenseItem(
-                    expense: eachTripExpense[index],
-                  )
-                : const Text('No expense data for this trip'),
-          ),
-        );
-      },
     );
   }
 }

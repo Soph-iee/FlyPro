@@ -48,7 +48,7 @@ class _AllExpensesPageState extends State<AllExpensesPage> {
                 context,
                 listen: false,
               ).clearExpenses();
-              Navigator.pop(context);
+              Navigator.of(context).pop();
             },
             child: const Text('Clear'),
           ),
