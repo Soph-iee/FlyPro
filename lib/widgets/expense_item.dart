@@ -3,7 +3,7 @@ import 'package:flypro_expense_tracker/models/category.dart';
 import 'package:flypro_expense_tracker/models/expense_model.dart';
 import 'package:flypro_expense_tracker/providers/app_provider.dart';
 import 'package:flypro_expense_tracker/screens/Expense/new_expense_page.dart';
-import 'package:flypro_expense_tracker/widgets/expense_detail.dart';
+import 'package:flypro_expense_tracker/screens/Expense/expense_detail.dart';
 import 'package:provider/provider.dart';
 
 class ExpenseItem extends StatelessWidget {
@@ -63,6 +63,7 @@ class ExpenseItem extends StatelessWidget {
             MaterialPageRoute(
               builder: (ctx) => NewExpensePage(
                 expense: expense,
+                expenseKey: expense.key,
               ),
             ),
           );
