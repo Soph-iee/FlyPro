@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flypro_expense_tracker/models/category.dart';
 import 'package:flypro_expense_tracker/models/currency.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 

@@ -45,6 +45,7 @@ class _NewExpensePageState extends State<NewExpensePage> {
     _prefferedCurrency = exp?.currency ?? Currency.ngn;
     _trip = exp?.tripId;
     selectedDate = exp?.date;
+    _imageBytes = exp?.image;
   }
 
   // date picker function
@@ -115,6 +116,7 @@ class _NewExpensePageState extends State<NewExpensePage> {
           currency: _prefferedCurrency,
           tripId: _trip!,
           notes: _notesController.text,
+          image: Uint8List.fromList(_imageBytes!),
         ),
         widget.expenseKey!,
       );
@@ -434,9 +436,9 @@ class _NewExpensePageState extends State<NewExpensePage> {
                 // height: 300.0,
                 margin: const EdgeInsets.only(bottom: 32),
                 color: Colors.grey[200],
-                child: _receiptImage != null
-                    ? Image.file(
-                        _receiptImage!,
+                child: _imageBytes != null
+                    ? Image.memory(
+                        Uint8List.fromList(_imageBytes!),
                         height: 250,
                         width: 250,
                       )
