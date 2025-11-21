@@ -84,15 +84,11 @@ Advanced Features
 
 ## Known Issues & Future Improvements
 
-1. State Reloading (CRUD):
-   ○ Issue: The Trip Details screen and expense details  sometimes displays stale data after editing an expense or adding a new expense  within that trip.
-   ○ Planned Fix: Implementing ValueListenableBuilder to listen to the specific Trip object in Hive.
-2. Savings Calculation:
-   ○ Issue: The "Remaining Budget" for a trip requires a manual refresh to update after adding an expense.
-   ○ Planned Fix: Move calculation logic into a Computed getter within the Provider.
-3. Backend Integration:
-   ○ Future Goal: Replace the Mock API/Hive setup with a real cloud backend (Firebase) for multi-device synchronization.
+1. State Reloading (CRUD):The Trip Details screen and expense details  sometimes displays stale data after editing an expense or adding a new expense  within that trip.
+2. Savings Calculation: The "Remaining Budget" for a trip requires a manual refresh to update after adding an expense.
+3. Backend Integration: Replace the Mock API/Hive setup with a real cloud backend (Firebase) for multi-device synchronization.
 4.  Dirty dependencies and Build and Setstate errors are still popping up in my debug console and I am figuring out how to fix them.
+5.  User specific expenses using local storage has not been achieved.
 
 ## Learning Resources
 
