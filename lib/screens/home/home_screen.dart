@@ -1,3 +1,5 @@
+import 'package:flypro_expense_tracker/models/expense_model.dart';
+import 'package:flypro_expense_tracker/models/users.dart';
 import 'package:flypro_expense_tracker/providers/app_provider.dart';
 import 'package:flypro_expense_tracker/screens/Expense/all_expenses.dart';
 import 'package:flypro_expense_tracker/screens/trips/new_trip.dart';
@@ -9,9 +11,9 @@ import 'package:flypro_expense_tracker/widgets/expense_item.dart';
 import 'package:flypro_expense_tracker/screens/Expense/new_expense_page.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key, this.userName});
+  const HomeScreen({super.key, this.user});
 
-  final String? userName;
+  final UserModel? user;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -33,7 +35,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    AppProvider appProvider = Provider.of<AppProvider>(context);
+    AppProvider appProvider = Provider.of<AppProvider>(
+      listen: true,
+      context,
+    );
+    AppProvider expenseProvider = Provider.of<AppProvider>(
+      listen: true,
+      context,
+    );
+    List<Expense> myExpense = expenseProvider.expenseItems
+        .where((expense) => expense.userId == widget.user!.id)
+        .toList();
 
     return Scaffold(
       backgroundColor: const Color(0xfff9fafb),
@@ -79,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     Text(
-                      widget.userName!,
+                      widget.user!.name,
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -131,32 +143,42 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(
               height: 16,
             ),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (ctx) => const AllExpensesPage(),
-                  ),
-                );
-              },
-              child: Text(
-                'Recent Expenses',
-                style: TextStyle(fontSize: 24, color: Colors.grey[600]),
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Recent Expenses',
+                  style: TextStyle(fontSize: 24, color: Colors.grey[600]),
+                ),
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (ctx) => AllExpensesPage(
+                          userId: widget.user!.id,
+                        ),
+                      ),
+                    );
+                  },
+                  iconSize: 32,
+                  icon: const Icon(Icons.expand_less_rounded),
+                ),
+              ],
             ),
 
             Expanded(
               flex: 2,
               child: ListView.builder(
-                itemCount: appProvider.expenseItems.length,
-                itemBuilder: (context, index) => Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: ExpenseItem(
-                    expense: appProvider.expenseItems[index],
-                  
-                  ),
-                ),
+                itemCount: myExpense.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: ExpenseItem(
+                      expense: myExpense[index],
+                    ),
+                  );
+                },
               ),
             ),
 
@@ -175,7 +197,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const NewExpensePage(),
+                    builder: (context) => NewExpensePage(
+                      userId: widget.user!.id,
+                    ),
                   ),
                 );
               },
@@ -190,7 +214,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (ctx) => const NewTrip(),
+                    builder: (ctx) => NewTrip(
+                      userId: widget.user!.id,
+                    ),
                   ),
                 );
               },

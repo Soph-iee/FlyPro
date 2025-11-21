@@ -27,13 +27,14 @@ class TripAdapter extends TypeAdapter<Trip> {
       expenseCount: fields[7] as int,
       status: fields[9] as TripStatus,
       totalSpent: fields[10] as double,
+      userId: fields[11] as String,
     )..id = fields[0] as String;
   }
 
   @override
   void write(BinaryWriter writer, Trip obj) {
     writer
-      ..writeByte(11)
+      ..writeByte(12)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -55,7 +56,9 @@ class TripAdapter extends TypeAdapter<Trip> {
       ..writeByte(9)
       ..write(obj.status)
       ..writeByte(10)
-      ..write(obj.totalSpent);
+      ..write(obj.totalSpent)
+      ..writeByte(11)
+      ..write(obj.userId);
   }
 
   @override

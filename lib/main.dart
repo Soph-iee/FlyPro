@@ -5,9 +5,9 @@ import 'package:flypro_expense_tracker/models/expense_model.dart';
 import 'package:flypro_expense_tracker/models/trip_model.dart';
 import 'package:flypro_expense_tracker/models/trip_status.dart';
 import 'package:flypro_expense_tracker/providers/app_provider.dart';
-import 'package:flypro_expense_tracker/screens/home/home_screen.dart';
+// import 'package:flypro_expense_tracker/screens/home/home_screen.dart';
 import 'package:flypro_expense_tracker/screens/splash_screen.dart';
-import 'package:flypro_expense_tracker/screens/trips/all_trips.dart';
+// import 'package:flypro_expense_tracker/screens/trips/all_trips.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
@@ -40,10 +40,10 @@ class MyApp extends StatelessWidget {
   Widget build(context) {
     return MaterialApp(
       home: const SplashScreen(),
-      routes: {
-        '/home': (context) => const HomeScreen(),
-        '/trips': (context) => const AllTrips(),
-      },
+      // routes: {
+      //   '/home': (context) => const HomeScreen(),
+      //   '/trips': (context) => const AllTrips(),
+      // },
 
       title: 'expense tracker',
       theme: ThemeData(

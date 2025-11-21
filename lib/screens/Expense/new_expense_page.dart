@@ -11,9 +11,15 @@ import 'package:flypro_expense_tracker/widgets/trip_list_tile.dart';
 import 'package:provider/provider.dart';
 
 class NewExpensePage extends StatefulWidget {
-  const NewExpensePage({this.expense, this.expenseKey, super.key});
+  const NewExpensePage({
+    this.expense,
+    this.expenseKey,
+    required this.userId,
+    super.key,
+  });
   final Expense? expense;
   final int? expenseKey;
+  final String userId;
   @override
   State<NewExpensePage> createState() => _NewExpensePageState();
 }
@@ -94,6 +100,7 @@ class _NewExpensePageState extends State<NewExpensePage> {
       } else {
         Provider.of<AppProvider>(context, listen: false).addExpense(
           Expense(
+            userId: widget.userId,
             amount: amountEntered,
             description: validTitle,
             date: selectedDate!,
@@ -108,6 +115,7 @@ class _NewExpensePageState extends State<NewExpensePage> {
     } else {
       Provider.of<AppProvider>(context, listen: false).updateExpense(
         Expense(
+          userId: widget.userId,
           amount: int.parse(_amountController.text),
           description: _descriptionController.text,
           date: selectedDate!,
@@ -157,8 +165,7 @@ class _NewExpensePageState extends State<NewExpensePage> {
   }
 
   void _selectRecieptImage(File image) async {
-    setState(() {
-    });
+    setState(() {});
 
     _imageBytes = await image.readAsBytes();
     if (!mounted) return;

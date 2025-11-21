@@ -36,6 +36,9 @@ class Trip extends HiveObject {
   TripStatus status;
   @HiveField(10)
   double totalSpent;
+   @HiveField(11)
+  String userId;
+  
 
   Trip({
     required this.desription,
@@ -48,6 +51,7 @@ class Trip extends HiveObject {
     this.expenseCount = 0,
     required this.status,
     this.totalSpent = 0.0,
+    required this.userId
   }) : id = uuid.v4();
 
   String get formattedStartDate {

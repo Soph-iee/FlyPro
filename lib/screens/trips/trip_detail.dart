@@ -56,7 +56,12 @@ class TripDetail extends StatelessWidget {
     );
     return Scaffold(
       appBar: AppBar(
-        title: Text(trip.name),
+        title: Row(
+          children: [
+            Text(trip.name),
+            Text(trip.userId),
+          ],
+        ),
 
         actions: [
           IconButton(onPressed: deleteTrip, icon: const Icon(Icons.delete)),
@@ -218,7 +223,9 @@ class TripDetail extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (ctx) => const NewExpensePage(),
+                              builder: (ctx) => NewExpensePage(
+                                userId: trip.userId,
+                              ),
                             ),
                           );
                         },

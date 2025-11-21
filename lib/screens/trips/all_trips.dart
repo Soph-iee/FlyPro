@@ -7,7 +7,8 @@ import 'package:flypro_expense_tracker/widgets/trip_item.dart';
 import 'package:provider/provider.dart';
 
 class AllTrips extends StatefulWidget {
-  const AllTrips({super.key});
+  const AllTrips({super.key, required this.userId});
+  final String userId;
 
   @override
   State<AllTrips> createState() => _AllTripsState();
@@ -52,7 +53,9 @@ class _AllTripsState extends State<AllTrips> {
       listen: true,
       context,
     );
-    List<Trip> myTrips = tripProvider.tripItems;
+    List<Trip> myTrips = tripProvider.tripItems
+        .where((trip) => trip.userId == widget.userId)
+        .toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -65,7 +68,9 @@ class _AllTripsState extends State<AllTrips> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (ctx) => const NewTrip(),
+                  builder: (ctx) => NewTrip(
+                    userId: widget.userId,
+                  ),
                 ),
               );
             },

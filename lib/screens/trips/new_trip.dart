@@ -7,7 +7,8 @@ import 'package:flypro_expense_tracker/widgets/textform_field.dart';
 import 'package:provider/provider.dart';
 
 class NewTrip extends StatefulWidget {
-  const NewTrip({super.key});
+  const NewTrip({super.key, required this.userId});
+  final String userId;
 
   @override
   State<NewTrip> createState() => _NewTripState();
@@ -60,7 +61,7 @@ class _NewTripState extends State<NewTrip> {
       listen: false,
     );
     tripProvider.addTrip(
-      Trip(
+      Trip( userId: widget.userId ,
         desription: _tripDescription,
         budget: _tripBudget,
         name: _tripName,

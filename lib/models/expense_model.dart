@@ -33,6 +33,8 @@ class Expense extends HiveObject {
   String? notes;
   @HiveField(8)
   Uint8List? image;
+  @HiveField(9)
+  String userId;
 
   Expense({
     required this.amount,
@@ -43,6 +45,7 @@ class Expense extends HiveObject {
     required this.date,
     this.notes,
     this.image,
+    required this.userId,
   }) : id = uuid.v4();
 
   String get formattedDate {

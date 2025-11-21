@@ -35,9 +35,9 @@ class _LoginPageState extends State<LoginPage> {
 
     if (user != null) {
       if (!mounted) return;
-      String userName = user.name;
+      UserModel loggedInUser = user;
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => Layout(userName: userName)),
+        MaterialPageRoute(builder: (_) => Layout(user: loggedInUser)),
       );
     } else {
       if (!mounted) return;

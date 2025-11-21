@@ -61,7 +61,8 @@ class ExpenseItem extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (ctx) => NewExpensePage(
+              builder: (ctx) => NewExpensePage( 
+                userId: expense.userId,
                 expense: expense,
                 expenseKey: expense.key,
               ),

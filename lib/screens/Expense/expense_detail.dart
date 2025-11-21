@@ -14,7 +14,9 @@ class ExpenseDetail extends StatelessWidget {
     final expenseProvider = Provider.of<AppProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Expense Details'),
+        title: Row(
+          children: [const Text('Expense Details'), Text(expense.userId)],
+        ),
         actions: [
           IconButton(
             onPressed: () {
@@ -141,6 +143,7 @@ class ExpenseDetail extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (ctx) => NewExpensePage(
+                          userId: expense.userId,
                           expense: expense,
                           expenseKey: expense.key,
                         ),

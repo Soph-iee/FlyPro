@@ -6,7 +6,8 @@ import 'package:flypro_expense_tracker/widgets/expense_item.dart';
 import 'package:provider/provider.dart';
 
 class AllExpensesPage extends StatefulWidget {
-  const AllExpensesPage({super.key});
+  const AllExpensesPage({super.key, required this.userId});
+  final String userId;
 
   @override
   State<AllExpensesPage> createState() => _AllExpensesPageState();
@@ -22,7 +23,9 @@ class _AllExpensesPageState extends State<AllExpensesPage> {
       context,
       listen: false,
     );
-    _allExpenses = expenseProvider.expenseItems;
+    _allExpenses = expenseProvider.expenseItems
+        .where((expense) => expense.userId == widget.userId)
+        .toList();
     _filteredExpenses = _allExpenses;
   }
 

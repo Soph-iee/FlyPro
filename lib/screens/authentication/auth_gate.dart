@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flypro_expense_tracker/models/users.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flypro_expense_tracker/layout.dart';
 import 'package:flypro_expense_tracker/screens/authentication/login_page.dart';
@@ -16,9 +17,9 @@ class AuthGate extends StatelessWidget {
     try {
       final Map<String, dynamic> session =
           json.decode(sessionJson) as Map<String, dynamic>;
-      final String userName = (session['name'] ?? '').toString();
-      if (userName.isEmpty) return const LoginPage();
-      return Layout(userName: userName);
+      final UserModel user = UserModel.fromMap(session);
+      if (user.name.isEmpty) return const LoginPage();
+      return Layout(user: user);
     } catch (_) {
       return const LoginPage();
     }
