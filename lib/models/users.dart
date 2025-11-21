@@ -55,6 +55,35 @@ class AuthService {
     return http.Response(jsonEncode(response), 200);
   }
 
+  // forgot password logic
+  Future<http.Response> forgotPassword(String email) async {
+    await Future.delayed(const Duration(seconds: 1));
+    final user = mockUsers.firstWhere(
+      (u) => u['email'] == email,
+      orElse: () => {},
+    );
+
+    if (user.isEmpty) {
+      return http.Response(
+        jsonEncode({
+          'success': false,
+          'message': 'THis email is not registered',
+        }),
+        401,
+      );
+    }
+
+    return http.Response(
+      jsonEncode({
+        'success': true,
+        'message': 'this is your password: ${user['password']}',
+        'user':user
+      }),
+      200,
+    );
+  }
+  // logout logic
+
   Future<http.Response> logout() async {
     await Future.delayed(const Duration(seconds: 1));
     final prefs = await SharedPreferences.getInstance();
@@ -86,9 +115,6 @@ class AuthService {
       return http.Response(jsonEncode(response), 200);
     }
   }
-
-
-  
 }
 
 class AuthRepository {
@@ -96,6 +122,16 @@ class AuthRepository {
 
   Future<UserModel?> login(String email, String password) async {
     final res = await _service.login(email, password);
+    final body = jsonDecode(res.body);
+
+    if (res.statusCode == 200 && body['success']) {
+      return UserModel.fromMap(body['user']);
+    }
+    return null;
+  }
+
+  Future<UserModel?> forgotPassword(String email) async {
+    final res = await _service.forgotPassword(email);
     final body = jsonDecode(res.body);
 
     if (res.statusCode == 200 && body['success']) {

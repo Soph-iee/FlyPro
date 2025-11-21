@@ -14,89 +14,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // List<Map<String, String>> _allowedUsers = [];
-  // bool _obscurePassword = true;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _loadAllowedUsers();
-  // }
-
-  // Future<void> _loadAllowedUsers() async {
-  //   try {
-  //     final SharedPreferences prefs = await SharedPreferences.getInstance();
-  //     String? stored = prefs.getString('users');
-  //     if (stored == null || stored.isEmpty) {
-  //       final String jsonString = await rootBundle.loadString(
-  //         'assets/data/users.json',
-  //       );
-  //       stored = jsonString;
-  //       await prefs.setString('users', stored);
-  //     }
-  //     final List<dynamic> data = json.decode(stored) as List<dynamic>;
-  //     setState(() {
-  //       _allowedUsers = data
-  //           .whereType<Map<String, dynamic>>()
-  //           .map(
-  //             (e) => <String, String>{
-  //               'email': (e['email'] ?? '').toString().trim().toLowerCase(),
-  //               'password': (e['password'] ?? '').toString(),
-  //               'name': (e['name'] ?? '').toString(),
-  //             },
-  //           )
-  //           .toList();
-  //     });
-  //   } catch (e) {
-  //     errorMessage('Failed to load users.json');
-  //   }
-  // }
-
-  // Future<void> logUserIn() async {
-  //   final String inputEmail = emailController.text.trim().toLowerCase();
-  //   final String inputPassword = passwordController.text;
-
-  //   final Map<String, String> matchedUser = _allowedUsers.firstWhere(
-  //     (user) =>
-  //         user['email'] == inputEmail && user['password'] == inputPassword,
-  //     orElse: () => <String, String>{},
-  //   );
-
-  //   if (matchedUser.isNotEmpty) {
-  //     final String userName = matchedUser['name']!;
-
-  //     // Persist session
-  //     final SharedPreferences prefs = await SharedPreferences.getInstance();
-  //     await prefs.setString(
-  //       'session',
-  //       json.encode({
-  //         'email': inputEmail,
-  //         'name': userName,
-  //         'loggedInAt': DateTime.now().toIso8601String(),
-  //       }),
-  //     );
-  //     if (!mounted) return;
-  //     Navigator.of(context).pushReplacement(
-  //       MaterialPageRoute(builder: (_) => Layout(userName: userName)),
-  //     );
-  //   } else {
-  //     errorMessage('Invalid credentials');
-  //   }
-  // }
-
-  Future<void> _handleForgotPassword() =>
-      ForgotPasswordFlow.handleForgotPassword(context);
-
-  // void errorMessage(String data) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (context) {
-  //       return AlertDialog(
-  //         title: Text(data),
-  //       );
-  //     },
-  //   );
-  // }
+  Future<void> _handleForgotPassword() => Navigator.push(
+    context,
+    MaterialPageRoute(builder: (_) => const ForgotPassword()),
+  );
 
   final repo = AuthRepository();
   final emailController = TextEditingController();
@@ -205,7 +126,10 @@ class _LoginPageState extends State<LoginPage> {
               height: 25,
             ),
             // LOGIN BUTTON
-            PrimaryBtn(onTap: loading ? null : handleLogin),
+            PrimaryBtn(
+              onTap: loading ? null : handleLogin,
+              text: 'Login',
+            ),
             const SizedBox(
               height: 25,
             ),

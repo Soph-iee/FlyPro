@@ -23,7 +23,18 @@ class _RegisterPageState extends State<RegisterPage> {
     final String password = _passwordController.text;
 
     if (name.isEmpty || email.isEmpty || password.isEmpty) {
-      _showError('Please fill all fields');
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(
+        SnackBar(
+          padding: const EdgeInsets.all(24),
+          backgroundColor: Theme.of(context).primaryColor,
+          content: const Text(
+            'Please all fields',
+            style: TextStyle(fontSize: 24),
+          ),
+        ),
+      );
       return;
     }
 
@@ -43,7 +54,19 @@ class _RegisterPageState extends State<RegisterPage> {
       (u) => (u['email'] ?? '').toString() == email,
     );
     if (exists) {
-      _showError('Email already registered');
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(
+        SnackBar(
+          padding: const EdgeInsets.all(24),
+          backgroundColor: Theme.of(context).primaryColor,
+          content: const Text(
+            'Email already registered',
+            style: TextStyle(fontSize: 24),
+          ),
+        ),
+      );
       return;
     }
 
@@ -59,12 +82,7 @@ class _RegisterPageState extends State<RegisterPage> {
     Navigator.pop(context); // return to Login
   }
 
-  void _showError(String msg) {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(title: Text(msg)),
-    );
-  }
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +117,7 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
             ),
             const SizedBox(height: 24),
-            PrimaryBtn(onTap: _saveUser),
+            PrimaryBtn(onTap: _saveUser, text: 'Login',),
           ],
         ),
       ),
