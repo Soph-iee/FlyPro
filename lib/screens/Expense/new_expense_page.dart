@@ -49,7 +49,6 @@ class _NewExpensePageState extends State<NewExpensePage> {
   }
 
   // date picker function
-  File? _receiptImage;
   List<int>? _imageBytes;
   Future<void> _selectDate() async {
     final DateTime? pickedDate = await showDatePicker(
@@ -159,7 +158,6 @@ class _NewExpensePageState extends State<NewExpensePage> {
 
   void _selectRecieptImage(File image) async {
     setState(() {
-      _receiptImage = image;
     });
 
     _imageBytes = await image.readAsBytes();
